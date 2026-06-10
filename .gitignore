@@ -1,0 +1,9 @@
+.env
+node_modules/
+data/
+archive/
+.tmp.driveupload/
+.playwright-mcp/
+test-results/
+npm-debug.log*
+.gstack/

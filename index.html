@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title></title>
+    <meta name="description" content="">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="/">
+    <meta property="og:locale" content="fa_IR">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="">
+    <meta property="og:title" content="">
+    <meta property="og:description" content="">
+    <meta property="og:url" content="/">
+    <meta property="og:image" content="assets/design/hero-logo-cropped.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="">
+    <meta name="twitter:description" content="">
+    <meta name="twitter:image" content="assets/design/hero-logo-cropped.png">
+    <script id="structured-data" type="application/ld+json"></script>
+    <link rel="icon" href="data:,">
+    <link rel="preload" as="image" href="assets/design/hero-logo-cropped.png" fetchpriority="high">
+    <link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    <header class="topnav" data-od-id="topnav">
+      <div class="topnav-inner">
+        <a class="brand" href="#top" aria-label="صدای خوب">
+          <span class="brand-mark"><img src="assets/design/sedayekhubBG.png" alt=""></span>
+          <strong data-content="page.siteName"></strong>
+        </a>
+        <nav class="nav-links" id="siteNav" aria-label="فهرست سایت">
+          <a href="#course" data-content="navigation.links.course"></a>
+          <a href="#curriculum" data-content="navigation.links.curriculum"></a>
+          <a href="#studio" data-content="navigation.links.studio"></a>
+          <a href="#testimonials" data-content="navigation.links.testimonials"></a>
+          <a href="#checkout" data-content="navigation.links.checkout"></a>
+        </nav>
+        <a class="btn btn-primary nav-cta" href="#checkout" data-content="course.primaryButton"></a>
+        <button class="btn btn-secondary menu-toggle" type="button" aria-label="باز کردن فهرست" aria-controls="siteNav" aria-expanded="false">☰</button>
+      </div>
+    </header>
+
+    <main id="content">
+      <section class="hero" id="top" data-section data-od-id="hero">
+        <div class="hero-shell">
+          <nav class="hero-card-nav" aria-label="فهرست سریع">
+            <a class="hero-card-nav__pill" href="#contact" data-content="navigation.links.contact"></a>
+            <a href="#curriculum" data-content="navigation.links.curriculum"></a>
+            <a href="#course" data-content="navigation.links.course"></a>
+            <a href="#top">خانه</a>
+          </nav>
+          <div class="hero-copy" data-reveal>
+            <h1 data-content="course.title"></h1>
+            <p class="lead" data-content="hero.intro"></p>
+            <div class="hero-cta">
+              <a class="btn btn-primary" href="#checkout" data-content="course.primaryButton"></a>
+              <a class="btn btn-secondary btn-arrow" href="#curriculum" data-content="course.secondaryButton"></a>
+            </div>
+            <div class="hero-note" aria-label="ویژگی‌های دوره" data-render-list="course.orbit"></div>
+          </div>
+          <div class="hero-logo-wrap" aria-hidden="true">
+            <img src="assets/design/hero-logo-cropped.png" width="1065" height="360" alt="">
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="course" data-section data-od-id="course">
+        <div class="container intro-split">
+          <div data-reveal>
+            <h2 data-content="course.title"></h2>
+            <p class="lead" style="margin-top: 22px;" data-content="course.body"></p>
+          </div>
+          <aside class="course-card" data-reveal>
+            <span class="meta" data-content="checkout.priceLabel"></span>
+            <h3 style="margin-top: 10px;" data-content="checkout.courseTitle"></h3>
+            <ul data-render-list="studio.features"></ul>
+            <div class="course-instruments" aria-label="تصویرهای سازهای دوره">
+              <span class="course-instrument"><img src="assets/design/inst-piano.png" width="436" height="405" alt="" loading="lazy" decoding="async"></span>
+              <span class="course-instrument"><img src="assets/design/ostad-flute.png" width="304" height="483" alt="" loading="lazy" decoding="async"></span>
+              <span class="course-instrument"><img src="assets/design/ostad-daf.png" width="459" height="493" alt="" loading="lazy" decoding="async"></span>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="section" id="curriculum" data-section data-od-id="curriculum">
+        <div class="container">
+          <div style="max-width: 680px;" data-reveal>
+            <h2 data-content="curriculum.title"></h2>
+            <p class="lead" style="margin-top: 18px;" data-content="curriculum.intro"></p>
+          </div>
+
+          <div class="orbit-board" aria-label="چهار محور اصلی دوره" data-render-list="curriculum.topics">
+            <div class="orbit-line" aria-hidden="true"></div>
+          </div>
+
+          <div class="focus-stage">
+            <div class="focus-steps" aria-label="مسیر اسکرولی تمرکز درس" data-render-list="curriculum.steps"></div>
+            <div class="lesson-panel">
+              <div>
+                <span class="meta" id="moduleMeta" data-content="curriculum.moduleKicker"></span>
+                <h3 id="moduleTitle" style="margin-top: 10px;"></h3>
+                <p class="lead" id="moduleText" style="margin-top: 16px;"></p>
+              </div>
+              <div class="lesson-visual">
+                <img id="moduleImage" src="assets/design/ostad-piano.png" alt="">
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section" id="studio" data-section data-od-id="method">
+        <div class="container stack" style="gap: 56px;">
+          <div style="max-width: 720px;" data-reveal>
+            <h2 data-content="studio.title"></h2>
+            <p class="lead" style="margin-top: 18px;" data-content="studio.body"></p>
+          </div>
+          <div class="grid-3" data-render-list="studio.featureCards"></div>
+        </div>
+      </section>
+
+      <section class="section" id="outcomes" data-section data-od-id="outcomes">
+        <div class="container grid-1-2">
+          <div data-reveal>
+            <h2 data-content="outcomes.title"></h2>
+            <p class="lead" data-content="outcomes.intro"></p>
+          </div>
+          <div class="grid-3" data-render-list="outcomes.items"></div>
+        </div>
+      </section>
+
+      <section class="section" id="testimonials" data-section data-od-id="testimonials">
+        <div class="container quote-band" data-reveal>
+          <div class="testimonial-heading">
+            <h2 data-content="testimonials.title"></h2>
+            <p class="lead" data-content="testimonials.intro"></p>
+          </div>
+          <div class="testimonial-carousel" aria-label="نظر هنرجوها" data-render-list="testimonials.items"></div>
+        </div>
+      </section>
+
+      <section class="section" id="checkout" data-section data-od-id="checkout">
+        <div class="container checkout-wrap">
+          <aside class="checkout-card" data-reveal>
+            <span class="meta checkout-kicker" data-content="checkout.priceLabel"></span>
+            <h2 style="margin-top: 14px;" data-content="checkout.courseTitle"></h2>
+            <p style="margin: 18px 0 0;" data-content="checkout.body"></p>
+            <div class="checkout-visual" aria-hidden="true">
+              <img class="checkout-visual__main" src="assets/design/hero-logo-cropped.png" width="434" alt="" loading="lazy" decoding="async">
+            </div>
+            <ul data-render-list="checkout.benefits"></ul>
+            <p class="meta checkout-note" data-content="checkout.note"></p>
+          </aside>
+
+          <form class="form-card" id="registrationForm" data-checkout-form novalidate data-reveal>
+            <h2 data-content="checkout.title"></h2>
+            <p class="lead" style="margin-top: 14px; margin-bottom: 30px;" data-content="checkout.body"></p>
+
+            <div class="field">
+              <label for="fullName" data-content="checkout.form.fullNameLabel"></label>
+              <input class="input" id="fullName" name="fullName" autocomplete="name" required>
+            </div>
+            <div class="field">
+              <label for="mobile" data-content="checkout.form.mobileLabel"></label>
+              <input class="input" id="mobile" name="mobile" inputmode="tel" required>
+            </div>
+            <div class="field">
+              <label for="email" data-content="checkout.form.emailLabel"></label>
+              <input class="input" id="email" name="email" type="email" autocomplete="email">
+            </div>
+
+            <button class="btn btn-primary" type="submit" data-content="checkout.form.submitButton"></button>
+            <div class="form-message" id="formMessage" data-checkout-status role="status" aria-live="polite"></div>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer class="pagefoot" id="contact" data-section data-od-id="footer">
+      <div class="container">
+        <div class="grid-2">
+          <div>
+            <h2 data-content="contact.title"></h2>
+          </div>
+          <p class="lead" data-content="contact.body"></p>
+        </div>
+        <div class="contact-grid" data-render-list="contact.methods"></div>
+        <div class="footer-bottom">
+          <span class="meta">© 2026 <span data-content="page.siteName"></span></span>
+          <span class="meta" data-content="contact.note"></span>
+        </div>
+      </div>
+    </footer>
+
+    <script id="site-content" type="application/json"></script>
+    <script src="script.js"></script>
+  </body>
+</html>
