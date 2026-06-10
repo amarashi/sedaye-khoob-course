@@ -46,13 +46,14 @@
       <section class="hero" id="top" data-section data-od-id="hero">
         <div class="hero-shell">
           <nav class="hero-card-nav" aria-label="فهرست سریع">
-            <a class="hero-card-nav__pill" href="#contact" data-content="navigation.links.contact"></a>
+            <a class="hero-card-nav__pill" href="#checkout" data-content="navigation.links.contactShort"></a>
             <a href="#curriculum" data-content="navigation.links.curriculum"></a>
             <a href="#course" data-content="navigation.links.course"></a>
-            <a href="#top">خانه</a>
+            <a href="#top" data-content="navigation.links.home"></a>
           </nav>
           <div class="hero-copy" data-reveal>
-            <h1 data-content="course.title"></h1>
+            <p class="eyebrow" data-content="hero.eyebrow"></p>
+            <h1 data-content="hero.title"></h1>
             <p class="lead" data-content="hero.intro"></p>
             <div class="hero-cta">
               <a class="btn btn-primary" href="#checkout" data-content="course.primaryButton"></a>
@@ -69,17 +70,18 @@
       <section class="section" id="course" data-section data-od-id="course">
         <div class="container intro-split">
           <div data-reveal>
+            <p class="eyebrow" data-content="course.eyebrow"></p>
             <h2 data-content="course.title"></h2>
             <p class="lead" style="margin-top: 22px;" data-content="course.body"></p>
           </div>
           <aside class="course-card" data-reveal>
-            <span class="meta" data-content="checkout.priceLabel"></span>
-            <h3 style="margin-top: 10px;" data-content="checkout.courseTitle"></h3>
+            <span class="meta" data-content="course.cardKicker"></span>
+            <h3 style="margin-top: 10px;" data-content="course.cardTitle"></h3>
             <ul data-render-list="studio.features"></ul>
             <div class="course-instruments" aria-label="تصویرهای سازهای دوره">
-              <span class="course-instrument"><img src="assets/design/inst-piano.png" width="436" height="405" alt="" loading="lazy" decoding="async"></span>
-              <span class="course-instrument"><img src="assets/design/ostad-flute.png" width="304" height="483" alt="" loading="lazy" decoding="async"></span>
-              <span class="course-instrument"><img src="assets/design/ostad-daf.png" width="459" height="493" alt="" loading="lazy" decoding="async"></span>
+              <span class="course-instrument"><img src="assets/design/inst-piano.png" width="436" height="405" alt="پیانو برای تمرین آکوردها" loading="lazy" decoding="async"></span>
+              <span class="course-instrument"><img src="assets/design/ostad-flute.png" width="304" height="483" alt="استاد در حال تمرین فلوت" loading="lazy" decoding="async"></span>
+              <span class="course-instrument"><img src="assets/design/ostad-daf.png" width="459" height="493" alt="استاد در حال تمرین دف" loading="lazy" decoding="async"></span>
             </div>
           </aside>
         </div>
@@ -88,6 +90,7 @@
       <section class="section" id="curriculum" data-section data-od-id="curriculum">
         <div class="container">
           <div style="max-width: 680px;" data-reveal>
+            <p class="eyebrow" data-content="curriculum.eyebrow"></p>
             <h2 data-content="curriculum.title"></h2>
             <p class="lead" style="margin-top: 18px;" data-content="curriculum.intro"></p>
           </div>
@@ -115,6 +118,7 @@
       <section class="section" id="studio" data-section data-od-id="method">
         <div class="container stack" style="gap: 56px;">
           <div style="max-width: 720px;" data-reveal>
+            <p class="eyebrow" data-content="studio.eyebrow"></p>
             <h2 data-content="studio.title"></h2>
             <p class="lead" style="margin-top: 18px;" data-content="studio.body"></p>
           </div>
@@ -125,6 +129,7 @@
       <section class="section" id="outcomes" data-section data-od-id="outcomes">
         <div class="container grid-1-2">
           <div data-reveal>
+            <p class="eyebrow" data-content="outcomes.eyebrow"></p>
             <h2 data-content="outcomes.title"></h2>
             <p class="lead" data-content="outcomes.intro"></p>
           </div>
@@ -135,6 +140,7 @@
       <section class="section" id="testimonials" data-section data-od-id="testimonials">
         <div class="container quote-band" data-reveal>
           <div class="testimonial-heading">
+            <p class="eyebrow" data-content="testimonials.eyebrow"></p>
             <h2 data-content="testimonials.title"></h2>
             <p class="lead" data-content="testimonials.intro"></p>
           </div>
@@ -149,15 +155,16 @@
             <h2 style="margin-top: 14px;" data-content="checkout.courseTitle"></h2>
             <p style="margin: 18px 0 0;" data-content="checkout.body"></p>
             <div class="checkout-visual" aria-hidden="true">
-              <img class="checkout-visual__main" src="assets/design/hero-logo-cropped.png" width="434" alt="" loading="lazy" decoding="async">
+              <img class="checkout-visual__main" src="assets/design/logo_blk.png" width="434" alt="" loading="lazy" decoding="async">
             </div>
             <ul data-render-list="checkout.benefits"></ul>
             <p class="meta checkout-note" data-content="checkout.note"></p>
           </aside>
 
           <form class="form-card" id="registrationForm" data-checkout-form novalidate data-reveal>
+            <p class="eyebrow" data-content="checkout.eyebrow"></p>
             <h2 data-content="checkout.title"></h2>
-            <p class="lead" style="margin-top: 14px; margin-bottom: 30px;" data-content="checkout.body"></p>
+            <p class="lead" style="margin-top: 14px; margin-bottom: 30px;" data-content="checkout.formIntro"></p>
 
             <div class="field">
               <label for="fullName" data-content="checkout.form.fullNameLabel"></label>
@@ -171,6 +178,10 @@
               <label for="email" data-content="checkout.form.emailLabel"></label>
               <input class="input" id="email" name="email" type="email" autocomplete="email">
             </div>
+            <div class="field">
+              <label for="question" data-content="checkout.form.questionLabel"></label>
+              <textarea class="textarea" id="question" name="question" data-content-placeholder="checkout.form.questionPlaceholder"></textarea>
+            </div>
 
             <button class="btn btn-primary" type="submit" data-content="checkout.form.submitButton"></button>
             <div class="form-message" id="formMessage" data-checkout-status role="status" aria-live="polite"></div>
@@ -183,6 +194,7 @@
       <div class="container">
         <div class="grid-2">
           <div>
+            <p class="eyebrow" data-content="contact.eyebrow"></p>
             <h2 data-content="contact.title"></h2>
           </div>
           <p class="lead" data-content="contact.body"></p>

@@ -161,7 +161,7 @@
       const title = document.createElement("h3");
       title.textContent = module.label || "";
       const text = document.createElement("p");
-      text.textContent = module.text || "";
+      text.textContent = module.topicText || module.text || "";
 
       article.append(visual, title, text);
       board.append(article);
@@ -184,7 +184,7 @@
       const title = document.createElement("h3");
       title.textContent = module.label || module.title || "";
       const text = document.createElement("p");
-      text.textContent = module.text || "";
+      text.textContent = module.stepText || module.text || "";
 
       step.append(title, text);
       container.append(step);
@@ -196,7 +196,7 @@
     clear(grid);
     if (!grid || !Array.isArray(items)) return;
 
-    items.slice(0, 3).forEach((text, index) => {
+    items.slice(0, 3).forEach((item, index) => {
       const card = document.createElement("article");
       card.className = "feature";
       card.setAttribute("data-reveal", "");
@@ -204,9 +204,9 @@
       mark.className = "feature-mark";
       mark.innerHTML = featureIcons[index % featureIcons.length];
       const title = document.createElement("h3");
-      title.textContent = text;
+      title.textContent = typeof item === "string" ? item : item.title || "";
       const body = document.createElement("p");
-      body.textContent = text;
+      body.textContent = typeof item === "string" ? item : item.text || "";
       card.append(mark, title, body);
       grid.append(card);
     });
@@ -307,6 +307,9 @@
     setAttributeIfDefined(document.querySelector(".nav-links"), "aria-label", content.navigation?.siteMenuLabel);
     setAttributeIfDefined(document.querySelector("input[name='mobile']"), "placeholder", content.checkout?.form?.mobilePlaceholder);
     setAttributeIfDefined(document.querySelector("input[name='email']"), "placeholder", content.checkout?.form?.emailPlaceholder);
+    document.querySelectorAll("[data-content-placeholder]").forEach((element) => {
+      setAttributeIfDefined(element, "placeholder", valueAt(content, element.dataset.contentPlaceholder));
+    });
 
     document.querySelectorAll("[data-content]").forEach((element) => {
       setText(element, valueAt(content, element.dataset.content));
@@ -318,7 +321,7 @@
     renderList("[data-render-list='checkout.benefits']", content.checkout?.benefits);
     renderTopics(modules);
     renderFocusSteps(modules);
-    renderFeatureCards(content.studio?.features);
+    renderFeatureCards(content.studio?.featureCards || content.studio?.features);
     renderOutcomes(content.outcomes?.items);
     renderTestimonials(content.testimonials?.items);
     renderContactMethods(content.contact?.methods);
@@ -458,6 +461,7 @@
       fullName: String(formData.get("fullName") || "").trim(),
       mobile: normaliseDigits(formData.get("mobile")).replace(/\s+/g, ""),
       email: String(formData.get("email") || "").trim(),
+      question: String(formData.get("question") || "").trim(),
     };
 
     submitButton.disabled = true;

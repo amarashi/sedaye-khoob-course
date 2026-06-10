@@ -34,19 +34,16 @@ function renderIndex(template, content, options = {}) {
   html = setAttributeInFirstTag(html, /<meta\b[^>]*\bname="twitter:description"[^>]*>/, "content", seo.twitterDescription);
   html = setAttributeInFirstTag(html, /<meta\b[^>]*\bname="twitter:image"[^>]*>/, "content", seo.imageUrl);
   html = replaceStructuredDataScript(html, buildStructuredData(content, seo, options));
-  html = setAttributeInFirstTag(html, /<header\b[^>]*\bclass="topbar"[^>]*>/, "aria-label", content.navigation?.topbarLabel || "");
-  html = setAttributeInFirstTag(html, /<nav\b[^>]*\bclass="site-menu"[^>]*>/, "aria-label", content.navigation?.siteMenuLabel || "");
-  html = setAttributeInFirstTag(html, /<div\b[^>]*\bclass="section-meter"[^>]*>/, "aria-label", content.navigation?.themeLabel || "");
-  html = setAttributeInFirstTag(html, /<button\b[^>]*\bclass="moon-toggle"[^>]*>/, "aria-label", content.navigation?.themeButtonLabel || "");
-  html = setAttributeInFirstTag(html, /<img\b[^>]*\bclass="brand-wordmark"[^>]*>/, "alt", content.hero?.logoAlt || "");
-  html = setAttributeInFirstTag(html, /<img\b[^>]*\bclass="checkout-logo"[^>]*>/, "alt", content.checkout?.logoAlt || "");
+  html = setAttributeInFirstTag(html, /<a\b[^>]*\bclass="brand"[^>]*>/, "aria-label", content.page?.siteName || content.hero?.logoAlt || "");
+  html = setAttributeInFirstTag(html, /<nav\b[^>]*\bclass="nav-links"[^>]*>/, "aria-label", content.navigation?.siteMenuLabel || "");
+  html = setAttributeInFirstTag(html, /<button\b[^>]*\bclass="btn btn-secondary menu-toggle"[^>]*>/, "aria-label", content.navigation?.menuButtonLabel || "باز کردن فهرست");
   html = setAttributeInFirstTag(html, /<input\b[^>]*\bname="mobile"[^>]*>/, "placeholder", content.checkout?.form?.mobilePlaceholder || "");
   html = setAttributeInFirstTag(html, /<input\b[^>]*\bname="email"[^>]*>/, "placeholder", content.checkout?.form?.emailPlaceholder || "");
-  html = setAttributeInFirstTag(html, /<div\b[^>]*\bclass="module-board"[^>]*>/, "aria-label", content.curriculum?.boardLabel || "");
-  html = setAttributeInFirstTag(html, /<div\b[^>]*\bclass="module-tabs"[^>]*>/, "aria-label", content.curriculum?.tabsLabel || "");
-  html = setAttributeInFirstTag(html, /<div\b[^>]*\bclass="about-stat-grid"[^>]*>/, "aria-label", content.about?.statsLabel || "");
-  html = setAttributeInFirstTag(html, /<div\b[^>]*\bclass="testimonial-grid"[^>]*>/, "aria-label", content.testimonials?.gridLabel || "");
-  html = setAttributeInFirstTag(html, /<div\b[^>]*\bclass="contact-methods"[^>]*>/, "aria-label", content.contact?.methodsLabel || "");
+  html = setAttributeInFirstTag(html, /<textarea\b[^>]*\bname="question"[^>]*>/, "placeholder", content.checkout?.form?.questionPlaceholder || "");
+  html = setAttributeInFirstTag(html, /<div\b[^>]*\bclass="orbit-board"[^>]*>/, "aria-label", content.curriculum?.boardLabel || "");
+  html = setAttributeInFirstTag(html, /<div\b[^>]*\bclass="focus-steps"[^>]*>/, "aria-label", content.curriculum?.tabsLabel || "");
+  html = setAttributeInFirstTag(html, /<div\b[^>]*\bclass="testimonial-carousel"[^>]*>/, "aria-label", content.testimonials?.gridLabel || "");
+  html = setAttributeInFirstTag(html, /<div\b[^>]*\bclass="contact-grid"[^>]*>/, "aria-label", content.contact?.methodsLabel || "");
 
   for (const [path, value] of Object.entries(flattenContent(content))) {
     if (!Array.isArray(value) && value !== null && typeof value !== "object") {
@@ -56,13 +53,15 @@ function renderIndex(template, content, options = {}) {
 
   html = replaceDataList(html, "course.orbit", renderSimpleSpans(content.course?.orbit));
   html = replaceDataList(html, "studio.features", renderFeatureItems(content.studio?.features));
+  html = replaceDataList(html, "studio.featureCards", renderFeatureCards(content.studio?.featureCards || content.studio?.features));
+  html = replaceDataList(html, "curriculum.topics", renderTopics(content.curriculum?.modules));
+  html = replaceDataList(html, "curriculum.steps", renderFocusSteps(content.curriculum?.modules));
   html = replaceDataList(html, "outcomes.items", renderOutcomes(content.outcomes?.items));
   html = replaceDataList(html, "about.paragraphs", renderParagraphs(content.about?.paragraphs));
   html = replaceDataList(html, "about.stats", renderStats(content.about?.stats));
   html = replaceDataList(html, "testimonials.items", renderTestimonials(content.testimonials?.items));
   html = replaceDataList(html, "checkout.benefits", renderListItems(content.checkout?.benefits));
   html = replaceDataList(html, "contact.methods", renderContactMethods(content.contact?.methods));
-  html = replaceDataList(html, "curriculum.modules", renderModuleTabs(content.curriculum?.modules));
   html = renderInitialModule(html, content.curriculum?.modules?.[0]);
   html = applySectionVisibility(html, content);
   html = replaceSiteContentScript(html, content);
@@ -227,17 +226,18 @@ function replaceDataContent(html, path, value) {
 }
 
 function replaceDataList(html, path, renderedItems) {
-  const pattern = new RegExp(`(<([a-z0-9]+)\\b[^>]*\\bdata-content-list="${escapeRegExp(path)}"[^>]*>)([\\s\\S]*?)(</\\2>)`, "gi");
+  const pattern = new RegExp(`(<([a-z0-9]+)\\b[^>]*\\bdata-render-list="${escapeRegExp(path)}"[^>]*>)([\\s\\S]*?)(</\\2>)`, "gi");
   return html.replace(pattern, `$1${renderedItems || ""}$4`);
 }
 
 function renderInitialModule(html, module) {
   if (!module) return html;
 
-  html = html.replace(/(<h3\b[^>]*\bclass="module-title"[^>]*>)([\s\S]*?)(<\/h3>)/, `$1${escapeHtml(module.title || "")}$3`);
-  html = html.replace(/(<p\b[^>]*\bclass="module-text"[^>]*>)([\s\S]*?)(<\/p>)/, `$1${escapeHtml(module.text || "")}$3`);
-  html = html.replace(/<img\b[^>]*\bclass="tone-instrument"[^>]*\bdata-instrument-tone="percussion"[^>]*>/, (tag) => {
+  html = html.replace(/(<h3\b[^>]*\bid="moduleTitle"[^>]*>)([\s\S]*?)(<\/h3>)/, `$1${escapeHtml(module.title || "")}$3`);
+  html = html.replace(/(<p\b[^>]*\bid="moduleText"[^>]*>)([\s\S]*?)(<\/p>)/, `$1${escapeHtml(module.text || "")}$3`);
+  html = html.replace(/<img\b[^>]*\bid="moduleImage"[^>]*>/, (tag) => {
     tag = setAttribute(tag, "src", module.image || "");
+    tag = setAttribute(tag, "alt", module.title || module.label || "");
     tag = setAttribute(tag, "loading", "lazy");
     tag = setAttribute(tag, "decoding", "async");
     return setImageDimensions(tag, module.image);
@@ -288,11 +288,11 @@ function removeSectionLinks(html, id) {
 }
 
 function renderSimpleSpans(items = []) {
-  return items.map((item) => `<span>${escapeHtml(item)}</span>`).join("");
+  return items.map((item) => `<span class="tag">${escapeHtml(item)}</span>`).join("");
 }
 
 function renderFeatureItems(items = []) {
-  return items.map((item) => `<li><span></span>${escapeHtml(item)}</li>`).join("");
+  return items.map((item) => `<li>${escapeHtml(item)}</li>`).join("");
 }
 
 function renderListItems(items = []) {
@@ -311,32 +311,27 @@ function renderStats(items = []) {
 
 function renderOutcomes(items = []) {
   return items
-    .map((item) => {
-      const tone = item.tone || inferToneFromImage(item.image);
-      return [
-        '<article class="outcome-card reveal tilt-card" data-tilt>',
-        `<img class="tone-instrument" data-instrument-tone="${escapeAttribute(tone)}" src="${escapeAttribute(item.image || "")}"${imageDimensionAttributes(item.image)} alt="" loading="lazy" decoding="async">`,
-        `<h3>${escapeHtml(item.title || "")}</h3>`,
-        `<p>${escapeHtml(item.text || "")}</p>`,
-        "</article>",
-      ].join("");
-    })
+    .map((item) => [
+      '<article class="feature" data-reveal>',
+      `<h3>${escapeHtml(item.title || "")}</h3>`,
+      `<p>${escapeHtml(item.text || "")}</p>`,
+      "</article>",
+    ].join(""))
     .join("");
 }
 
 function renderTestimonials(items = []) {
   return items
-    .map((item) => [
-      '<article class="testimonial-card reveal tilt-card" data-tilt>',
-      `<div class="testimonial-card__avatar" aria-hidden="true">${escapeHtml(item.avatar || "")}</div>`,
+    .map((item, index) => [
+      '<article class="testimonial-card">',
+      '<div class="testimonial-copy">',
       `<p>${escapeHtml(item.quote || "")}</p>`,
-      "<footer>",
-      `<strong>${escapeHtml(item.name || "")}</strong>`,
-      `<span>${escapeHtml(item.role || "")}</span>`,
-      "</footer>",
+      `<footer>${escapeHtml([item.name, item.role].filter(Boolean).join("، "))}</footer>`,
+      "</div>",
+      `<img class="testimonial-art" src="${escapeAttribute(testimonialImage(index))}" alt="" loading="lazy" aria-hidden="true">`,
       "</article>",
     ].join(""))
-    .join("");
+    .join("") + renderCarouselControls(items.length);
 }
 
 function renderContactMethods(items = []) {
@@ -344,22 +339,95 @@ function renderContactMethods(items = []) {
     .map((item) => {
       const dir = /^\+?\d/.test(item.value || "") ? ' dir="ltr"' : "";
       return [
-        `<a class="contact-method" href="${escapeAttribute(item.href || "#contact")}">`,
-        `<span>${escapeHtml(item.label || "")}</span>`,
-        `<strong${dir}>${escapeHtml(item.value || "")}</strong>`,
-        "</a>",
+        '<div class="contact-card">',
+        `<span class="meta">${escapeHtml(item.label || "")}</span>`,
+        `<h3><a href="${escapeAttribute(item.href || "#contact")}"${dir}>${escapeHtml(item.value || "")}</a></h3>`,
+        "</div>",
       ].join("");
     })
     .join("");
 }
 
-function renderModuleTabs(items = []) {
+function renderFeatureCards(items = []) {
   return items
+    .slice(0, 3)
     .map((item, index) => {
-      const activeClass = index === 0 ? " is-active" : "";
-      return `<button class="module-tab${activeClass}" type="button" role="tab" aria-selected="${index === 0}" data-module="${escapeAttribute(item.id || "")}">${escapeHtml(item.label || "")}</button>`;
+      const title = typeof item === "string" ? item : item.title || "";
+      const text = typeof item === "string" ? item : item.text || "";
+      return [
+        '<article class="feature" data-reveal>',
+        `<div class="feature-mark">${featureIcon(index)}</div>`,
+        `<h3>${escapeHtml(title)}</h3>`,
+        `<p>${escapeHtml(text)}</p>`,
+        "</article>",
+      ].join("");
     })
     .join("");
+}
+
+function renderTopics(items = []) {
+  return [
+    '<div class="orbit-line" aria-hidden="true"></div>',
+    ...items.slice(0, 4).map((module) => [
+      '<article class="topic" data-reveal>',
+      '<div class="topic-visual">',
+      `<img src="${escapeAttribute(module.image || "")}" alt="${escapeAttribute(module.title || module.label || "")}" loading="lazy" decoding="async">`,
+      "</div>",
+      `<h3>${escapeHtml(module.label || "")}</h3>`,
+      `<p>${escapeHtml(module.topicText || module.text || "")}</p>`,
+      "</article>",
+    ].join("")),
+  ].join("");
+}
+
+function renderFocusSteps(items = []) {
+  return items
+    .map((module, index) => {
+      const activeClass = index === 0 ? " is-active" : "";
+      const ariaCurrent = index === 0 ? ' aria-current="step"' : "";
+      return [
+        `<article class="focus-step${activeClass}" data-module="${escapeAttribute(module.id || `module-${index}`)}" tabindex="0" role="button"${ariaCurrent}>`,
+        `<h3>${escapeHtml(module.label || module.title || "")}</h3>`,
+        `<p>${escapeHtml(module.stepText || module.text || "")}</p>`,
+        "</article>",
+      ].join("");
+    })
+    .join("");
+}
+
+function renderCarouselControls(count) {
+  if (!count) return "";
+  const dots = Array.from({ length: count }, (_, index) => {
+    const activeClass = index === 0 ? " is-active" : "";
+    return `<button class="carousel-dot${activeClass}" type="button" tabindex="-1"></button>`;
+  }).join("");
+
+  return [
+    '<div class="carousel-controls" aria-label="کنترل نظر هنرجوها">',
+    '<button class="carousel-btn" type="button" data-carousel="prev" aria-label="نظر قبلی">→</button>',
+    `<div class="carousel-dots" aria-hidden="true">${dots}</div>`,
+    '<button class="carousel-btn" type="button" data-carousel="next" aria-label="نظر بعدی">←</button>',
+    "</div>",
+  ].join("");
+}
+
+function testimonialImage(index) {
+  const images = [
+    "assets/design/testimonial-piano.png",
+    "assets/design/testimonial-parts-8.png",
+    "assets/design/testimonial-parts-3.png",
+    "assets/design/testimonial-guitar.png",
+  ];
+  return images[index % images.length];
+}
+
+function featureIcon(index) {
+  const icons = [
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 15c3 0 3-6 6-6s3 6 6 6 3-6 4-6"></path><path d="M4 19h16"></path></svg>',
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M5 4h14v16H5z"></path><path d="M8 8h8M8 12h6M8 16h4"></path></svg>',
+    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="8"></circle><path d="M12 8v4l3 2"></path></svg>',
+  ];
+  return icons[index % icons.length];
 }
 
 function inferToneFromImage(imagePath = "") {

@@ -75,6 +75,7 @@ db.exec(`
     full_name TEXT NOT NULL,
     mobile TEXT NOT NULL,
     email TEXT,
+    question TEXT,
     amount INTEGER NOT NULL,
     currency TEXT NOT NULL,
     payment_provider TEXT NOT NULL,
@@ -89,14 +90,15 @@ db.exec(`
   );
   CREATE INDEX IF NOT EXISTS idx_orders_payment_authority ON orders(payment_authority);
 `);
+ensureColumn(db, "orders", "question", "TEXT");
 
 const insertOrder = db.prepare(`
   INSERT INTO orders (
-    id, created_at, updated_at, status, course_slug, course_title, full_name, mobile, email,
+    id, created_at, updated_at, status, course_slug, course_title, full_name, mobile, email, question,
     amount, currency, payment_provider
   )
   VALUES (
-    @id, @createdAt, @updatedAt, @status, @courseSlug, @courseTitle, @fullName, @mobile, @email,
+    @id, @createdAt, @updatedAt, @status, @courseSlug, @courseTitle, @fullName, @mobile, @email, @question,
     @amount, @currency, @paymentProvider
   )
 `);
@@ -219,6 +221,7 @@ app.post("/api/orders", async (request, response) => {
     fullName: parsed.data.fullName,
     mobile: parsed.data.mobile,
     email: parsed.data.email,
+    question: parsed.data.question,
     amount: config.amount,
     currency: config.currency,
     paymentProvider: config.paymentProvider,
@@ -376,6 +379,7 @@ function parseOrderRequest(body) {
   const fullName = clean(body.fullName);
   const mobile = normaliseMobile(body.mobile);
   const email = clean(body.email).toLowerCase();
+  const question = clean(body.question);
 
   if (clean(body.course) && clean(body.course) !== config.courseSlug) {
     return { ok: false, message: "دوره انتخاب‌شده معتبر نیست." };
@@ -393,11 +397,21 @@ function parseOrderRequest(body) {
     return { ok: false, message: "فرمت ایمیل درست نیست." };
   }
 
-  return { ok: true, data: { fullName, mobile, email: email || null } };
+  if (question.length > 1000) {
+    return { ok: false, message: "متن پرسش طولانی است." };
+  }
+
+  return { ok: true, data: { fullName, mobile, email: email || null, question: question || null } };
 }
 
 function clean(value) {
   return String(value || "").trim().replace(/\s+/g, " ");
+}
+
+function ensureColumn(database, tableName, columnName, definition) {
+  const columns = database.prepare(`PRAGMA table_info(${tableName})`).all();
+  if (columns.some((column) => column.name === columnName)) return;
+  database.exec(`ALTER TABLE ${tableName} ADD COLUMN ${columnName} ${definition}`);
 }
 
 function createMailTransporter(smtpConfig) {
@@ -460,6 +474,7 @@ function buildAdminOrderNotificationText(eventName, order) {
     `Name: ${order.full_name}`,
     `Mobile: ${order.mobile}`,
     `Email: ${order.email || "not provided"}`,
+    `Question: ${order.question || "not provided"}`,
     "",
     `Spot Player status: ${order.spotplayer_status}`,
     order.spotplayer_license_id ? `Spot Player licence ID: ${order.spotplayer_license_id}` : null,
