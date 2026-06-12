@@ -137,9 +137,9 @@
 :root[data-theme="dark"] {
   color-scheme: dark;
 
-  --color-bg: oklch(17% 0.036 26);
-  --color-surface: oklch(21% 0.042 26);
-  --color-surface-2: oklch(24.5% 0.046 26);
+  --color-bg: oklab(12.570999999999998% 0.04502 0.02519);
+  --color-surface: oklab(18.387% 0.06352 0.03415);
+  --color-surface-2: rgb(90, 5, 5);
   --color-ink: oklch(90% 0.012 30);
   --color-ink-strong: oklch(97% 0.008 30);
   --color-muted: oklch(72% 0.03 28);
