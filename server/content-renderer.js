@@ -251,7 +251,7 @@ function replaceSiteContentScript(html, content) {
   const pattern = /(<script\b[^>]*\bid="site-content"[^>]*>)([\s\S]*?)(<\/script>)/i;
   if (pattern.test(html)) return html.replace(pattern, `$1${json}$3`);
 
-  return html.replace(/<script src="script\.js"><\/script>/, `<script id="site-content" type="application/json">${json}</script>\n    <script src="script.js"></script>`);
+  return html.replace(/<script src="script\.js(?:\?[^"]*)?"><\/script>/, (tag) => `<script id="site-content" type="application/json">${json}</script>\n    ${tag}`);
 }
 
 function replaceStructuredDataScript(html, data) {
