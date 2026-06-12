@@ -22,6 +22,10 @@
     <link rel="icon" href="data:,">
     <link rel="preload" as="image" href="assets/design/sedayekhubBG.webp" fetchpriority="high">
     <link rel="preload" as="image" href="assets/design/maestro-conductor.webp">
+    <script>
+      /* Apply the saved theme before first paint to avoid a light flash. */
+      try { if (localStorage.getItem("sk-theme") === "dark") document.documentElement.dataset.theme = "dark"; } catch (error) {}
+    </script>
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
@@ -38,6 +42,10 @@
           <a href="#contact" data-content="navigation.links.contactShort"></a>
         </nav>
         <a class="btn btn-gold btn-sm nav-cta" href="#checkout" data-content="navigation.cta"></a>
+        <button class="theme-toggle" id="themeToggle" type="button" aria-label="تغییر حالت تیره و روشن" aria-pressed="false">
+          <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><path d="M20.6 13.2A8.4 8.4 0 1 1 10.8 3.4a6.8 6.8 0 0 0 9.8 9.8z"></path></svg>
+          <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true"><circle cx="12" cy="12" r="4.2"></circle><path d="M12 2.8v2.4M12 18.8v2.4M2.8 12h2.4M18.8 12h2.4M5.5 5.5l1.7 1.7M16.8 16.8l1.7 1.7M18.5 5.5l-1.7 1.7M7.2 16.8l-1.7 1.7"></path></svg>
+        </button>
         <button class="btn btn-secondary menu-toggle" type="button" aria-label="باز کردن فهرست" aria-controls="siteNav" aria-expanded="false">☰</button>
       </div>
     </header>

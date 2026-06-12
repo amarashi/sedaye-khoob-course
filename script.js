@@ -387,6 +387,51 @@
     onScroll();
   }
 
+  /* Light/dark switch — the saved choice is applied pre-paint by the
+     inline bootstrap in <head>; this just wires the button. */
+  function setupThemeToggle() {
+    const toggle = document.getElementById("themeToggle");
+    if (!toggle) return;
+    const root = document.documentElement;
+    const sync = () => toggle.setAttribute("aria-pressed", String(root.dataset.theme === "dark"));
+    toggle.addEventListener("click", () => {
+      const dark = root.dataset.theme !== "dark";
+      if (dark) {
+        root.dataset.theme = "dark";
+      } else {
+        delete root.dataset.theme;
+      }
+      try {
+        localStorage.setItem("sk-theme", dark ? "dark" : "light");
+      } catch {
+        // Private mode etc. — the choice just won't persist.
+      }
+      sync();
+    });
+    sync();
+  }
+
+  /* Count the hero stat numbers up from zero to their target, in Persian digits. */
+  function countUpHeroStats(g) {
+    const tl = g.timeline();
+    const toAscii = (s) => s.replace(/[۰-۹]/g, (d) => "۰۱۲۳۴۵۶۷۸۹".indexOf(d));
+    const toPersian = (n) => String(n).replace(/\d/g, (d) => "۰۱۲۳۴۵۶۷۸۹"[d]);
+    g.utils.toArray(".hero-stats strong").forEach((el) => {
+      const match = toAscii(el.textContent || "").match(/\d+/);
+      if (!match) return;
+      const target = parseInt(match[0], 10);
+      const counter = { value: 0 };
+      el.textContent = toPersian(0);
+      tl.to(counter, {
+        value: target,
+        duration: 1.8,
+        ease: "power2.out",
+        onUpdate: () => { el.textContent = toPersian(Math.round(counter.value)); },
+      }, 0);
+    });
+    return tl;
+  }
+
   /* Hero entrance + perpetual motion — the design's night-stage timeline. */
   function setupHeroMotion(content) {
     const hero = document.querySelector(".hero");
@@ -404,6 +449,7 @@
       .from("[data-anim='lead']", { y: 18, autoAlpha: 0, duration: 0.55 }, 0.9)
       .from("[data-anim='cta'] > *", { y: 16, autoAlpha: 0, duration: 0.5, stagger: 0.1, clearProps: "all" }, 1.0)
       .from(".hero-stats > div", { y: 14, autoAlpha: 0, duration: 0.45, stagger: 0.08 }, 1.1)
+      .add(countUpHeroStats(g), 1.15)
       .from(".hero-maestro", { y: 60, autoAlpha: 0, duration: 0.9, ease: "power2.out" }, 0.6)
       .from(".orchestra-podium", { scale: 0.3, autoAlpha: 0, duration: 0.8 }, 0.75)
       .from(".orb", { scale: 0, autoAlpha: 0, duration: 0.7, stagger: 0.14, ease: "back.out(1.8)" }, 0.8)
@@ -618,6 +664,7 @@
   });
 
   document.addEventListener("DOMContentLoaded", async () => {
+    setupThemeToggle();
     const content = readEmbeddedContent() || await fetchContent();
     if (!content) {
       console.error("Could not load site content.");

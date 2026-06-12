@@ -127,6 +127,80 @@
 }
 
 /* ============================================================
+   Dark theme — deep wine: a darkish red base (the brand crimson's
+   hue, kept low-chroma) instead of charcoal. The night-stage
+   sections (hero, testimonials, checkout, footer) stay midnight
+   indigo and read as a second register against the wine page,
+   with gold carrying the accents across both.
+   Toggled by script.js via <html data-theme="dark">.
+   ============================================================ */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+
+  --color-bg: oklch(17% 0.036 26);
+  --color-surface: oklch(21% 0.042 26);
+  --color-surface-2: oklch(24.5% 0.046 26);
+  --color-ink: oklch(90% 0.012 30);
+  --color-ink-strong: oklch(97% 0.008 30);
+  --color-muted: oklch(72% 0.03 28);
+  --color-faint: oklch(58% 0.03 28);
+  --color-border: oklch(33% 0.055 26);
+  --color-border-strong: oklch(48% 0.065 26);
+  --color-primary: var(--indigo-400);
+  --color-primary-hover: oklch(62% 0.2 274);
+  --color-primary-soft: oklch(28% 0.06 280);
+  --on-primary: oklch(97.5% 0.01 280);
+  --color-accent: oklch(66% 0.2 26);
+  --color-accent-soft: color-mix(in oklch, var(--crimson-500) 26%, transparent);
+  --glass: color-mix(in oklch, oklch(20% 0.042 26) 74%, transparent);
+
+  --shadow-xs: 0 2px 8px rgba(0, 0, 0, 0.35);
+  --shadow-sm: 0 12px 30px rgba(0, 0, 0, 0.42);
+  --shadow-md: 0 22px 60px rgba(16, 3, 4, 0.5);
+  --shadow-lg: 0 30px 74px rgba(16, 3, 4, 0.58);
+  --shadow-gold: 0 14px 34px color-mix(in oklch, var(--gold-500) 22%, transparent);
+  --inset-top: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+/* Components that blend toward light primitives need a wine mix. */
+[data-theme="dark"] .mod-orb__visual {
+  background: radial-gradient(circle at 50% 36%, oklch(32% 0.06 26), color-mix(in oklch, var(--color-surface) 84%, var(--crimson-500)) 62%, var(--color-surface));
+}
+[data-theme="dark"] .focus-stage {
+  background:
+    radial-gradient(70% 92% at 100% 100%, color-mix(in oklch, var(--gold-400) 9%, transparent), transparent 70%),
+    linear-gradient(135deg, var(--color-surface), color-mix(in oklch, var(--color-surface) 84%, var(--crimson-500)));
+}
+[data-theme="dark"] .focus-step.is-active {
+  background: color-mix(in oklch, var(--color-surface) 76%, var(--crimson-500));
+  border-color: color-mix(in oklch, var(--crimson-500) 50%, var(--color-border));
+}
+[data-theme="dark"] .lesson-panel {
+  background: linear-gradient(145deg, var(--color-surface), color-mix(in oklch, var(--color-surface) 88%, var(--gold-500)));
+}
+[data-theme="dark"] .lesson-visual {
+  background: radial-gradient(circle at 52% 34%, color-mix(in oklch, var(--gold-500) 16%, var(--color-surface)), var(--color-surface) 64%);
+}
+[data-theme="dark"] .course-instrument {
+  background: color-mix(in oklch, var(--color-surface-2) 80%, var(--color-surface));
+}
+[data-theme="dark"] .badge-gold {
+  color: var(--gold-300);
+  background: color-mix(in oklch, var(--gold-500) 14%, transparent);
+  border-color: color-mix(in oklch, var(--gold-500) 36%, transparent);
+}
+[data-theme="dark"] .form-message,
+[data-theme="dark"] .form-message.is-success {
+  background: color-mix(in oklch, var(--indigo-500) 28%, var(--color-surface));
+  color: var(--indigo-100);
+}
+[data-theme="dark"] .form-message.is-error {
+  background: color-mix(in oklch, var(--crimson-500) 42%, var(--color-surface));
+  border: 1px solid color-mix(in oklch, var(--crimson-500) 55%, transparent);
+  color: oklch(89% 0.05 25);
+}
+
+/* ============================================================
    Base
    ============================================================ */
 *, *::before, *::after { box-sizing: border-box; }
@@ -141,6 +215,7 @@ body {
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   overflow-x: clip;
+  transition: background-color var(--dur-slow) var(--ease-out), color var(--dur-slow) var(--ease-out);
 }
 img, svg { display: block; max-width: 100%; }
 a { color: inherit; text-decoration: none; }
@@ -343,7 +418,7 @@ h3, .h3 { font-size: var(--fs-h3); line-height: 1.28; font-weight: var(--fw-semi
 .topnav-inner {
   width: min(1200px, 100%);
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: auto 1fr auto auto;
   align-items: center;
   gap: 24px;
   padding: 12px 18px;
@@ -383,6 +458,34 @@ h3, .h3 { font-size: var(--fs-h3); line-height: 1.28; font-weight: var(--fw-semi
 .nav-cta { justify-self: end; }
 .menu-toggle { display: none; width: 44px; height: 44px; padding: 0; border-radius: 50%; }
 
+/* sun/moon theme switch — ghost over the hero, solid once the nav frosts */
+.theme-toggle {
+  justify-self: end;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  display: inline-grid;
+  place-items: center;
+  border-radius: 50%;
+  border: 1.5px solid color-mix(in oklch, var(--on-night) 26%, transparent);
+  background: color-mix(in oklch, var(--on-night) 10%, transparent);
+  color: var(--on-night);
+  transition: background var(--dur-base) var(--ease-out), border-color var(--dur-base) var(--ease-out), color var(--dur-base) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+}
+.theme-toggle:hover { background: color-mix(in oklch, var(--on-night) 20%, transparent); }
+.theme-toggle:active { transform: scale(0.94); }
+.theme-toggle:focus-visible { outline: 3px solid color-mix(in oklch, var(--indigo-400) 60%, transparent); outline-offset: 3px; }
+.topnav.is-stuck .theme-toggle {
+  color: var(--color-ink);
+  background: var(--color-surface);
+  border-color: var(--color-border-strong);
+}
+.topnav.is-stuck .theme-toggle:hover { background: var(--color-surface-2); }
+.theme-toggle svg { width: 18px; height: 18px; }
+.theme-toggle .icon-sun { display: none; }
+[data-theme="dark"] .theme-toggle .icon-sun { display: block; }
+[data-theme="dark"] .theme-toggle .icon-moon { display: none; }
+
 /* ============================================================
    Hero — the night stage
    ============================================================ */
@@ -393,7 +496,7 @@ h3, .h3 { font-size: var(--fs-h3); line-height: 1.28; font-weight: var(--fw-semi
   min-height: clamp(660px, 96vh, 980px);
   display: grid;
   align-items: start;
-  padding-block: clamp(88px, 10vh, 140px) clamp(56px, 7vh, 96px);
+  padding-block: clamp(48px, 6vh, 92px) clamp(56px, 7vh, 96px);
   color: var(--on-night);
   background:
     radial-gradient(120% 80% at 50% -10%, color-mix(in oklch, var(--gold-400) 30%, transparent), transparent 46%),
@@ -422,7 +525,7 @@ h3, .h3 { font-size: var(--fs-h3); line-height: 1.28; font-weight: var(--fw-semi
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  background: url("assets/design/sedakonmaraAll.webp") center 52% / min(1300px, 120%) auto no-repeat;
+  background: url("assets/design/sedakonmaraAll.webp") center 32% / min(1300px, 120%) auto no-repeat;
   opacity: 0.06;
   filter: invert(1);
 }
@@ -437,14 +540,43 @@ h3, .h3 { font-size: var(--fs-h3); line-height: 1.28; font-weight: var(--fw-semi
   align-items: center;
   text-align: center;
 }
-/* THE focal point — the giant calligraphic wordmark under the spotlight */
+/* subtle hazy halo behind the wordmark — slowly drifts through aurora hues */
+.hero-inner::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset-block-start: 0;
+  inset-inline-start: 59%;
+  width: min(880px, 100vw);
+  aspect-ratio: 1448 / 1086;
+  translate: -50% -10%;
+  background:
+    radial-gradient(46% 40% at 40% 44%, color-mix(in oklch, var(--gold-400) 26%, transparent), transparent 70%),
+    radial-gradient(42% 36% at 62% 38%, color-mix(in oklch, var(--magenta-500) 18%, transparent), transparent 72%),
+    radial-gradient(50% 42% at 50% 62%, color-mix(in oklch, var(--blue-500) 16%, transparent), transparent 74%);
+  filter: blur(46px);
+  mix-blend-mode: screen;
+  pointer-events: none;
+  animation: heroHaloAurora 18s ease-in-out infinite alternate;
+}
+@keyframes heroHaloAurora {
+  0%   { filter: blur(46px) hue-rotate(0deg); }
+  45%  { filter: blur(54px) hue-rotate(-45deg); }
+  100% { filter: blur(48px) hue-rotate(60deg); }
+}
+/* THE focal point — the giant calligraphic wordmark under the spotlight.
+   The layered drop-shadows trace the calligraphy's silhouette: a tight
+   warm-white rim, a bright gold "shadow" cast just below, then the wide
+   ambient bloom — a luminous shadow rather than a dark one. */
 .hero-logo {
   width: min(700px, 78vw);
   height: auto;
   margin-inline: auto;
   filter:
     drop-shadow(0 30px 60px rgba(0, 0, 0, 0.55))
-    drop-shadow(0 0 70px color-mix(in oklch, var(--gold-400) 50%, transparent))
+    drop-shadow(0 0 13px color-mix(in oklch, var(--gold-100) 78%, transparent))
+    drop-shadow(0 10px 38px color-mix(in oklch, var(--gold-400) 72%, transparent))
+    drop-shadow(0 0 80px color-mix(in oklch, var(--gold-400) 45%, transparent))
     saturate(1.12) contrast(1.05);
   will-change: transform;
 }
@@ -463,6 +595,7 @@ h3, .h3 { font-size: var(--fs-h3); line-height: 1.28; font-weight: var(--fw-semi
   line-height: 1.8;
   color: var(--on-night-muted);
   max-width: 52ch;
+  white-space: pre-line;
 }
 .hero-cta { display: flex; gap: 16px; flex-wrap: wrap; margin-top: 32px; justify-content: center; }
 .hero-stats { display: flex; gap: clamp(20px, 3vw, 40px); margin-top: 38px; flex-wrap: wrap; justify-content: center; }
@@ -568,15 +701,6 @@ h3, .h3 { font-size: var(--fs-h3); line-height: 1.28; font-weight: var(--fw-semi
   border: 1px solid var(--color-border);
   box-shadow: var(--shadow-md);
   overflow: hidden;
-}
-/* gradient top edge — the DS "spectrum" card variant */
-.course-card::before {
-  content: "";
-  position: absolute;
-  inset-inline: 0;
-  top: 0;
-  height: 5px;
-  background: var(--brand-spectrum-rtl);
 }
 .course-card h3 { margin: 12px 0 4px; }
 .course-card .badge { margin-bottom: 12px; }
