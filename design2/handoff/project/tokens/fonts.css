@@ -1,0 +1,11 @@
+/* ============================================================
+   Sedaye Khoob — Webfonts
+   Estedad: Persian variable font, full 100–900 weight axis.
+   ============================================================ */
+
+@font-face {
+  font-family: "Estedad";
+  src: url("../assets/fonts/Estedad-wght.woff2") format("woff2");
+  font-weight: 100 900;
+  font-display: swap;
+}

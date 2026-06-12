@@ -1,0 +1,33 @@
+<!-- @dsCard group="Colors" viewport="700x150" name="Crimson & gold — accents" subtitle="Staff-line red and the stage-light gold" -->
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<style>
+  body { margin: 0; padding: 24px; background: var(--color-surface); display: grid; gap: 14px; }
+  .ramp { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+  .chip { display: flex; flex-direction: column; gap: 6px; }
+  .sw { height: 46px; border-radius: 12px; box-shadow: inset 0 0 0 1px rgba(0,0,0,.05); }
+  .lbl { font-family: var(--font-mono); font-size: 10px; color: var(--color-muted); text-align: center; }
+</style>
+</head>
+<body>
+  <div class="ramp">
+    <div class="chip"><div class="sw" style="background:var(--crimson-100)"></div><span class="lbl">crimson-100</span></div>
+    <div class="chip"><div class="sw" style="background:var(--crimson-300)"></div><span class="lbl">300</span></div>
+    <div class="chip"><div class="sw" style="background:var(--crimson-500)"></div><span class="lbl">500 ◆</span></div>
+    <div class="chip"><div class="sw" style="background:var(--crimson-600)"></div><span class="lbl">600</span></div>
+    <div class="chip"><div class="sw" style="background:var(--crimson-700)"></div><span class="lbl">700</span></div>
+    <div class="chip"><div class="sw" style="background:var(--magenta-500)"></div><span class="lbl">magenta-500</span></div>
+  </div>
+  <div class="ramp">
+    <div class="chip"><div class="sw" style="background:var(--gold-100)"></div><span class="lbl">gold-100</span></div>
+    <div class="chip"><div class="sw" style="background:var(--gold-300)"></div><span class="lbl">300</span></div>
+    <div class="chip"><div class="sw" style="background:var(--gold-400)"></div><span class="lbl">400 ◆</span></div>
+    <div class="chip"><div class="sw" style="background:var(--gold-500)"></div><span class="lbl">500</span></div>
+    <div class="chip"><div class="sw" style="background:var(--gold-600)"></div><span class="lbl">600</span></div>
+    <div class="chip"><div class="sw" style="background:var(--blue-500)"></div><span class="lbl">blue-500</span></div>
+  </div>
+</body>
+</html>

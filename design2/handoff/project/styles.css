@@ -1,0 +1,13 @@
+/* ============================================================
+   Sedaye Khoob Design System — global entry point
+   Consumers link THIS file. It is only @import lines; every
+   token, font, and base rule is reached from here.
+   ============================================================ */
+
+@import "tokens/fonts.css";
+@import "tokens/colors.css";
+@import "tokens/typography.css";
+@import "tokens/spacing.css";
+@import "tokens/effects.css";
+@import "tokens/base.css";
+@import "tokens/components.css";

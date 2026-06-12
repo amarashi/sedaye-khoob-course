@@ -1,0 +1,25 @@
+<!-- @dsCard group="Colors" viewport="700x190" name="Brand spectrum" subtitle="Crimson → magenta → indigo → blue, lifted from the logo" -->
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<style>
+  body { margin: 0; padding: 26px; background: var(--color-surface); }
+  .bar { height: 78px; border-radius: var(--radius-md); background: var(--brand-spectrum-rtl); box-shadow: var(--shadow-sm); }
+  .stops { display: flex; margin-top: 14px; gap: 10px; }
+  .stop { flex: 1; }
+  .sw { height: 26px; border-radius: 8px; }
+  .lbl { font-family: var(--font-mono); font-size: 11px; color: var(--color-muted); margin-top: 7px; display: block; text-align: center; direction: ltr; }
+</style>
+</head>
+<body>
+  <div class="bar"></div>
+  <div class="stops">
+    <div class="stop"><div class="sw" style="background:var(--crimson-500)"></div><span class="lbl">crimson-500</span></div>
+    <div class="stop"><div class="sw" style="background:var(--magenta-500)"></div><span class="lbl">magenta-500</span></div>
+    <div class="stop"><div class="sw" style="background:var(--indigo-500)"></div><span class="lbl">indigo-500</span></div>
+    <div class="stop"><div class="sw" style="background:var(--blue-500)"></div><span class="lbl">blue-500</span></div>
+  </div>
+</body>
+</html>

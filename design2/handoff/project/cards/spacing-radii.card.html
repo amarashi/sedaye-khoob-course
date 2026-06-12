@@ -1,0 +1,22 @@
+<!-- @dsCard group="Spacing" viewport="700x160" name="Corner radii" subtitle="From 10px chips to 42px stadium cards & pills" -->
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<style>
+  body { margin: 0; padding: 26px; background: var(--color-surface); display: flex; align-items: center; gap: 18px; flex-wrap: wrap; }
+  .box { width: 92px; height: 78px; background: var(--color-surface-2); border: 1.5px solid var(--indigo-400); display: grid; place-items: end center; padding-bottom: 8px; }
+  .lbl { font-family: var(--font-mono); font-size: 10px; color: var(--color-muted); }
+  .pill { width: 120px; border-radius: var(--radius-pill); }
+</style>
+</head>
+<body>
+  <div class="box" style="border-radius:var(--radius-xs)"><span class="lbl">xs 10</span></div>
+  <div class="box" style="border-radius:var(--radius-sm)"><span class="lbl">sm 16</span></div>
+  <div class="box" style="border-radius:var(--radius-md)"><span class="lbl">md 24</span></div>
+  <div class="box" style="border-radius:var(--radius-card)"><span class="lbl">card 30</span></div>
+  <div class="box" style="border-radius:var(--radius-stadium)"><span class="lbl">stadium 42</span></div>
+  <div class="box pill"><span class="lbl">pill 999</span></div>
+</body>
+</html>

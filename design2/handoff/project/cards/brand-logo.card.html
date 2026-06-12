@@ -1,0 +1,20 @@
+<!-- @dsCard group="Brand" viewport="700x220" name="Logo & wordmark" subtitle="Calligraphic gradient mark on light & night" -->
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<style>
+  body { margin: 0; padding: 22px; background: var(--color-surface); display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .panel { border-radius: var(--radius-card); display: grid; place-items: center; padding: 26px; min-height: 150px; }
+  .light { background: var(--color-bg); border: 1px solid var(--color-border); }
+  .night { background: var(--color-night); }
+  .panel img { width: 78%; max-height: 110px; object-fit: contain; }
+  .night img { filter: brightness(1.12) drop-shadow(0 6px 18px rgba(0,0,0,.35)); }
+</style>
+</head>
+<body>
+  <div class="panel light"><img src="../assets/design/sedayekhubBG.png" alt="صدای خوب"></div>
+  <div class="panel night"><img src="../assets/design/sedayekhubBG.png" alt="صدای خوب"></div>
+</body>
+</html>

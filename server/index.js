@@ -298,6 +298,13 @@ app.get("/api/payments/zarinpal/callback", async (request, response) => {
     return response.redirect("/payment-result.html?status=failed");
   }
 
+  // Idempotency: a refreshed/retried callback must not re-verify or re-issue a licence.
+  // ZarinPal returns code 101 ("already verified") on replay, which would otherwise
+  // fall through and request a second Spot Player licence for an already-paid order.
+  if (["paid", "paid_licence_pending", "licence_issued"].includes(order.status)) {
+    return response.redirect(`/payment-result.html?status=success&order=${encodeURIComponent(order.id)}`);
+  }
+
   if (providerStatus.toUpperCase() !== "OK") {
     updateOrder.run({
       id: order.id,

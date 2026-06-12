@@ -20,49 +20,61 @@
     <meta name="twitter:image" content="assets/design/hero-logo-cropped.png">
     <script id="structured-data" type="application/ld+json"></script>
     <link rel="icon" href="data:,">
-    <link rel="preload" as="image" href="assets/design/hero-logo-cropped.png" fetchpriority="high">
+    <link rel="preload" as="image" href="assets/design/sedayekhubBG.webp" fetchpriority="high">
+    <link rel="preload" as="image" href="assets/design/maestro-conductor.webp">
     <link rel="stylesheet" href="styles.css">
   </head>
   <body>
-    <header class="topnav" data-od-id="topnav">
+    <header class="topnav" id="siteHeader" data-od-id="topnav">
       <div class="topnav-inner">
         <a class="brand" href="#top" aria-label="صدای خوب">
-          <span class="brand-mark"><img src="assets/design/sedayekhubBG.png" alt=""></span>
-          <strong data-content="page.siteName"></strong>
+          <strong class="spectrum-text" data-content="page.siteName"></strong>
         </a>
         <nav class="nav-links" id="siteNav" aria-label="فهرست سایت">
           <a href="#course" data-content="navigation.links.course"></a>
           <a href="#curriculum" data-content="navigation.links.curriculum"></a>
           <a href="#studio" data-content="navigation.links.studio"></a>
           <a href="#testimonials" data-content="navigation.links.testimonials"></a>
-          <a href="#checkout" data-content="navigation.links.checkout"></a>
+          <a href="#contact" data-content="navigation.links.contactShort"></a>
         </nav>
-        <a class="btn btn-primary nav-cta" href="#checkout" data-content="course.primaryButton"></a>
+        <a class="btn btn-gold btn-sm nav-cta" href="#checkout" data-content="navigation.cta"></a>
         <button class="btn btn-secondary menu-toggle" type="button" aria-label="باز کردن فهرست" aria-controls="siteNav" aria-expanded="false">☰</button>
       </div>
     </header>
 
     <main id="content">
       <section class="hero" id="top" data-section data-od-id="hero">
-        <div class="hero-shell">
-          <nav class="hero-card-nav" aria-label="فهرست سریع">
-            <a class="hero-card-nav__pill" href="#checkout" data-content="navigation.links.contactShort"></a>
-            <a href="#curriculum" data-content="navigation.links.curriculum"></a>
-            <a href="#course" data-content="navigation.links.course"></a>
-            <a href="#top" data-content="navigation.links.home"></a>
-          </nav>
-          <div class="hero-copy" data-reveal>
-            <p class="eyebrow" data-content="hero.eyebrow"></p>
-            <h1 data-content="hero.title"></h1>
-            <p class="lead" data-content="hero.intro"></p>
-            <div class="hero-cta">
-              <a class="btn btn-primary" href="#checkout" data-content="course.primaryButton"></a>
-              <a class="btn btn-secondary btn-arrow" href="#curriculum" data-content="course.secondaryButton"></a>
+        <div class="hero-spot" aria-hidden="true"></div>
+        <div class="hero-texture" aria-hidden="true"></div>
+
+        <div class="hero-cast" aria-hidden="true">
+          <span class="hero-note hero-note--1" data-depth="2.4">♪</span>
+          <span class="hero-note hero-note--2" data-depth="1.8">♫</span>
+          <span class="hero-note hero-note--3" data-depth="2.9">♬</span>
+          <span class="hero-note hero-note--4" data-depth="1.4">♩</span>
+          <span class="hero-note hero-note--5" data-depth="2.1">♪</span>
+          <span class="hero-note hero-note--6" data-depth="3.2">♫</span>
+          <span class="hero-note hero-note--7" data-depth="1.6">♪</span>
+        </div>
+
+        <div class="hero-inner">
+          <img class="hero-logo" data-anim="logo" data-depth="0.25" src="assets/design/sedayekhubBG.webp" width="1448" height="1086" alt="صدای خوب" fetchpriority="high">
+          <div class="hero-copy">
+            <h1 id="heroTitle" data-content="hero.title"></h1>
+            <p class="lead hero-lead" data-anim="lead" data-content="hero.intro"></p>
+            <div class="hero-cta" data-anim="cta">
+              <a class="btn btn-gold btn-lg" href="#checkout" data-content="hero.primaryButton"></a>
+              <a class="btn btn-ghost-night btn-lg btn-arrow" href="#curriculum" data-content="hero.secondaryButton"></a>
             </div>
-            <div class="hero-note" aria-label="ویژگی‌های دوره" data-render-list="course.orbit"></div>
+            <div class="hero-stats" data-render-list="hero.stats"></div>
           </div>
-          <div class="hero-logo-wrap" aria-hidden="true">
-            <img src="assets/design/hero-logo-cropped.png" width="1065" height="360" alt="">
+
+          <div class="hero-orchestra" aria-hidden="true">
+            <div class="orb orb--a" data-depth="1.5"><img src="assets/design/ostad-piano.webp" alt="" decoding="async"></div>
+            <div class="orb orb--b" data-depth="2.1"><img src="assets/design/ostad-daf.webp" alt="" decoding="async"></div>
+            <div class="orb orb--c" data-depth="1.2"><img src="assets/design/ostad-tar.webp" alt="" decoding="async"></div>
+            <div class="orchestra-podium" data-depth="0.3"></div>
+            <img class="hero-maestro" src="assets/design/maestro-conductor.webp" width="569" height="568" alt="" data-depth="0.7" decoding="async">
           </div>
         </div>
       </section>
@@ -72,17 +84,20 @@
           <div data-reveal>
             <p class="eyebrow" data-content="course.eyebrow"></p>
             <h2 data-content="course.title"></h2>
-            <p class="lead" style="margin-top: 22px;" data-content="course.body"></p>
+            <p class="lead" style="margin-top: 20px;" data-content="course.body"></p>
+            <div class="intro-cta">
+              <a class="btn btn-primary" href="#checkout" data-content="course.primaryButton"></a>
+            </div>
           </div>
           <aside class="course-card" data-reveal>
-            <span class="meta" data-content="course.cardKicker"></span>
-            <h3 style="margin-top: 10px;" data-content="course.cardTitle"></h3>
-            <ul data-render-list="studio.features"></ul>
+            <span class="badge badge-gold" data-content="course.cardKicker"></span>
+            <h3 data-content="course.cardTitle"></h3>
             <div class="course-instruments" aria-label="تصویرهای سازهای دوره">
-              <span class="course-instrument"><img src="assets/design/inst-piano.png" width="436" height="405" alt="پیانو برای تمرین آکوردها" loading="lazy" decoding="async"></span>
-              <span class="course-instrument"><img src="assets/design/ostad-flute.png" width="304" height="483" alt="استاد در حال تمرین فلوت" loading="lazy" decoding="async"></span>
-              <span class="course-instrument"><img src="assets/design/ostad-daf.png" width="459" height="493" alt="استاد در حال تمرین دف" loading="lazy" decoding="async"></span>
+              <span class="course-instrument"><img src="assets/design/inst-piano.webp" width="436" height="405" alt="پیانو برای تمرین آکوردها" loading="lazy" decoding="async"></span>
+              <span class="course-instrument"><img src="assets/design/inst-tar.webp" width="322" height="466" alt="تار برای تمرین فاصله‌ها" loading="lazy" decoding="async"></span>
+              <span class="course-instrument"><img src="assets/design/inst-tombak.webp" width="263" height="328" alt="تنبک برای تمرین ریتم" loading="lazy" decoding="async"></span>
             </div>
+            <ul class="checklist" data-render-list="studio.features"></ul>
           </aside>
         </div>
       </section>
@@ -95,20 +110,18 @@
             <p class="lead" style="margin-top: 18px;" data-content="curriculum.intro"></p>
           </div>
 
-          <div class="orbit-board" aria-label="چهار محور اصلی دوره" data-render-list="curriculum.topics">
-            <div class="orbit-line" aria-hidden="true"></div>
-          </div>
+          <div class="modgrid" aria-label="چهار محور اصلی دوره" data-render-list="curriculum.topics"></div>
 
-          <div class="focus-stage">
-            <div class="focus-steps" aria-label="مسیر اسکرولی تمرکز درس" data-render-list="curriculum.steps"></div>
+          <div class="focus-stage" data-reveal>
+            <div class="focus-steps" aria-label="ماژول‌های تئوری موسیقی" data-render-list="curriculum.steps"></div>
             <div class="lesson-panel">
               <div>
                 <span class="meta" id="moduleMeta" data-content="curriculum.moduleKicker"></span>
-                <h3 id="moduleTitle" style="margin-top: 10px;"></h3>
-                <p class="lead" id="moduleText" style="margin-top: 16px;"></p>
+                <h3 id="moduleTitle"></h3>
+                <p class="lead" id="moduleText" style="font-size: 17px;"></p>
               </div>
               <div class="lesson-visual">
-                <img id="moduleImage" src="assets/design/ostad-piano.png" alt="">
+                <img id="moduleImage" src="assets/design/ostad-piano.webp" alt="">
               </div>
             </div>
           </div>
@@ -131,18 +144,18 @@
           <div data-reveal>
             <p class="eyebrow" data-content="outcomes.eyebrow"></p>
             <h2 data-content="outcomes.title"></h2>
-            <p class="lead" data-content="outcomes.intro"></p>
+            <p class="lead" style="margin-top: 18px;" data-content="outcomes.intro"></p>
           </div>
           <div class="grid-3" data-render-list="outcomes.items"></div>
         </div>
       </section>
 
-      <section class="section" id="testimonials" data-section data-od-id="testimonials">
-        <div class="container quote-band" data-reveal>
-          <div class="testimonial-heading">
+      <section class="section tband" id="testimonials" data-section data-od-id="testimonials">
+        <div class="container">
+          <div class="testimonial-heading" data-reveal>
             <p class="eyebrow" data-content="testimonials.eyebrow"></p>
             <h2 data-content="testimonials.title"></h2>
-            <p class="lead" data-content="testimonials.intro"></p>
+            <p class="lead" style="margin-top: 16px;" data-content="testimonials.intro"></p>
           </div>
           <div class="testimonial-carousel" aria-label="نظر هنرجوها" data-render-list="testimonials.items"></div>
         </div>
@@ -151,20 +164,17 @@
       <section class="section" id="checkout" data-section data-od-id="checkout">
         <div class="container checkout-wrap">
           <aside class="checkout-card" data-reveal>
-            <span class="meta checkout-kicker" data-content="checkout.priceLabel"></span>
-            <h2 style="margin-top: 14px;" data-content="checkout.courseTitle"></h2>
-            <p style="margin: 18px 0 0;" data-content="checkout.body"></p>
-            <div class="checkout-visual" aria-hidden="true">
-              <img class="checkout-visual__main" src="assets/design/logo_blk.png" width="434" alt="" loading="lazy" decoding="async">
-            </div>
-            <ul data-render-list="checkout.benefits"></ul>
+            <span class="badge badge-night" data-content="checkout.priceLabel"></span>
+            <h2 data-content="checkout.courseTitle"></h2>
+            <p data-content="checkout.body"></p>
+            <ul class="checklist checklist-boxed" data-render-list="checkout.benefits"></ul>
             <p class="meta checkout-note" data-content="checkout.note"></p>
           </aside>
 
           <form class="form-card" id="registrationForm" data-checkout-form novalidate data-reveal>
             <p class="eyebrow" data-content="checkout.eyebrow"></p>
             <h2 data-content="checkout.title"></h2>
-            <p class="lead" style="margin-top: 14px; margin-bottom: 30px;" data-content="checkout.formIntro"></p>
+            <p class="lead" style="margin-top: 14px; margin-bottom: 28px;" data-content="checkout.formIntro"></p>
 
             <div class="field">
               <label for="fullName" data-content="checkout.form.fullNameLabel"></label>
@@ -183,7 +193,7 @@
               <textarea class="textarea" id="question" name="question" data-content-placeholder="checkout.form.questionPlaceholder"></textarea>
             </div>
 
-            <button class="btn btn-primary" type="submit" data-content="checkout.form.submitButton"></button>
+            <button class="btn btn-gold btn-lg" type="submit" data-content="checkout.form.submitButton"></button>
             <div class="form-message" id="formMessage" data-checkout-status role="status" aria-live="polite"></div>
           </form>
         </div>
@@ -192,7 +202,7 @@
 
     <footer class="pagefoot" id="contact" data-section data-od-id="footer">
       <div class="container">
-        <div class="grid-2">
+        <div class="grid-2" data-reveal>
           <div>
             <p class="eyebrow" data-content="contact.eyebrow"></p>
             <h2 data-content="contact.title"></h2>
@@ -208,6 +218,8 @@
     </footer>
 
     <script id="site-content" type="application/json"></script>
+    <script src="assets/vendor/gsap.min.js"></script>
+    <script src="assets/vendor/ScrollTrigger.min.js"></script>
     <script src="script.js"></script>
   </body>
 </html>

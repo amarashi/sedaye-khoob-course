@@ -1,0 +1,26 @@
+/* ============================================================
+   Sedaye Khoob — Spacing & layout tokens
+   ============================================================ */
+
+:root {
+  --space-2xs: 4px;
+  --space-xs:  8px;
+  --space-sm:  12px;
+  --space-md:  20px;
+  --space-lg:  32px;
+  --space-xl:  56px;
+  --space-2xl: 104px;
+
+  /* legacy gap aliases (original site names) */
+  --gap-xs: var(--space-xs);
+  --gap-sm: var(--space-sm);
+  --gap-md: var(--space-md);
+  --gap-lg: var(--space-lg);
+  --gap-xl: var(--space-xl);
+  --gap-2xl: var(--space-2xl);
+
+  --container: 1220px;
+  --container-narrow: 880px;
+  --gutter: clamp(20px, 4vw, 48px); /* @kind spacing */
+  --section-pad: clamp(64px, 9vw, 104px);
+}

@@ -40,7 +40,7 @@ function renderIndex(template, content, options = {}) {
   html = setAttributeInFirstTag(html, /<input\b[^>]*\bname="mobile"[^>]*>/, "placeholder", content.checkout?.form?.mobilePlaceholder || "");
   html = setAttributeInFirstTag(html, /<input\b[^>]*\bname="email"[^>]*>/, "placeholder", content.checkout?.form?.emailPlaceholder || "");
   html = setAttributeInFirstTag(html, /<textarea\b[^>]*\bname="question"[^>]*>/, "placeholder", content.checkout?.form?.questionPlaceholder || "");
-  html = setAttributeInFirstTag(html, /<div\b[^>]*\bclass="orbit-board"[^>]*>/, "aria-label", content.curriculum?.boardLabel || "");
+  html = setAttributeInFirstTag(html, /<div\b[^>]*\bclass="modgrid"[^>]*>/, "aria-label", content.curriculum?.boardLabel || "");
   html = setAttributeInFirstTag(html, /<div\b[^>]*\bclass="focus-steps"[^>]*>/, "aria-label", content.curriculum?.tabsLabel || "");
   html = setAttributeInFirstTag(html, /<div\b[^>]*\bclass="testimonial-carousel"[^>]*>/, "aria-label", content.testimonials?.gridLabel || "");
   html = setAttributeInFirstTag(html, /<div\b[^>]*\bclass="contact-grid"[^>]*>/, "aria-label", content.contact?.methodsLabel || "");
@@ -51,7 +51,7 @@ function renderIndex(template, content, options = {}) {
     }
   }
 
-  html = replaceDataList(html, "course.orbit", renderSimpleSpans(content.course?.orbit));
+  html = replaceDataList(html, "hero.stats", renderStats(content.hero?.stats));
   html = replaceDataList(html, "studio.features", renderFeatureItems(content.studio?.features));
   html = replaceDataList(html, "studio.featureCards", renderFeatureCards(content.studio?.featureCards || content.studio?.features));
   html = replaceDataList(html, "curriculum.topics", renderTopics(content.curriculum?.modules));
@@ -287,10 +287,6 @@ function removeSectionLinks(html, id) {
   return html.replace(pattern, "");
 }
 
-function renderSimpleSpans(items = []) {
-  return items.map((item) => `<span class="tag">${escapeHtml(item)}</span>`).join("");
-}
-
 function renderFeatureItems(items = []) {
   return items.map((item) => `<li>${escapeHtml(item)}</li>`).join("");
 }
@@ -313,6 +309,7 @@ function renderOutcomes(items = []) {
   return items
     .map((item) => [
       '<article class="feature" data-reveal>',
+      item.image ? `<img src="${escapeAttribute(item.image)}" alt="" loading="lazy" decoding="async">` : "",
       `<h3>${escapeHtml(item.title || "")}</h3>`,
       `<p>${escapeHtml(item.text || "")}</p>`,
       "</article>",
@@ -366,18 +363,17 @@ function renderFeatureCards(items = []) {
 }
 
 function renderTopics(items = []) {
-  return [
-    '<div class="orbit-line" aria-hidden="true"></div>',
-    ...items.slice(0, 4).map((module) => [
-      '<article class="topic" data-reveal>',
-      '<div class="topic-visual">',
+  return items
+    .slice(0, 4)
+    .map((module, index) => [
+      `<figure class="mod-orb${index === 0 ? " is-active" : ""}" data-module="${escapeAttribute(module.id || `module-${index}`)}" data-reveal tabindex="0" role="button">`,
+      '<div class="mod-orb__visual">',
       `<img src="${escapeAttribute(module.image || "")}" alt="${escapeAttribute(module.title || module.label || "")}" loading="lazy" decoding="async">`,
       "</div>",
-      `<h3>${escapeHtml(module.label || "")}</h3>`,
-      `<p>${escapeHtml(module.topicText || module.text || "")}</p>`,
-      "</article>",
-    ].join("")),
-  ].join("");
+      `<figcaption>${escapeHtml(module.label || "")}</figcaption>`,
+      "</figure>",
+    ].join(""))
+    .join("");
 }
 
 function renderFocusSteps(items = []) {
@@ -388,7 +384,7 @@ function renderFocusSteps(items = []) {
       return [
         `<article class="focus-step${activeClass}" data-module="${escapeAttribute(module.id || `module-${index}`)}" tabindex="0" role="button"${ariaCurrent}>`,
         `<h3>${escapeHtml(module.label || module.title || "")}</h3>`,
-        `<p>${escapeHtml(module.stepText || module.text || "")}</p>`,
+        `<p>${escapeHtml(module.text || "")}</p>`,
         "</article>",
       ].join("");
     })
@@ -413,10 +409,10 @@ function renderCarouselControls(count) {
 
 function testimonialImage(index) {
   const images = [
-    "assets/design/testimonial-piano.png",
-    "assets/design/testimonial-parts-8.png",
-    "assets/design/testimonial-parts-3.png",
-    "assets/design/testimonial-guitar.png",
+    "assets/design/testimonial-piano.webp",
+    "assets/design/testimonial-parts-8.webp",
+    "assets/design/testimonial-parts-3.webp",
+    "assets/design/testimonial-guitar.webp",
   ];
   return images[index % images.length];
 }

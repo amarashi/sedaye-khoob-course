@@ -1,0 +1,38 @@
+/* ============================================================
+   Sedaye Khoob — Typography tokens
+   One family does everything: Estedad, a Persian variable font
+   (weights 100–900). Latin/numeric fallback is Sofia Sans.
+   The site is RTL Farsi by default.
+   ============================================================ */
+
+:root {
+  --font-display: "Estedad", "Sofia Sans", "Segoe UI", Tahoma, Arial, sans-serif;
+  --font-body:    "Estedad", "Sofia Sans", "Segoe UI", Tahoma, Arial, sans-serif;
+  --font-mono:    ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+
+  /* Fluid display sizes (clamp: min, vw, max) */
+  --fs-display: clamp(48px, 8vw, 104px); /* @kind font */
+  --fs-h1:      clamp(42px, 7.4vw, 86px); /* @kind font */
+  --fs-h2:      clamp(30px, 4vw, 52px); /* @kind font */
+  --fs-h3:      clamp(21px, 2vw, 26px); /* @kind font */
+  --fs-lead:    clamp(17px, 1.4vw, 21px); /* @kind font */
+  --fs-body:    16px; /* @kind font */
+  --fs-sm:      14px; /* @kind font */
+  --fs-meta:    13px; /* @kind font */
+
+  /* Weights — Estedad axis */
+  --fw-light:   300; /* @kind font */
+  --fw-regular: 420; /* @kind font */
+  --fw-medium:  540; /* @kind font */
+  --fw-semibold: 640; /* @kind font */
+  --fw-bold:    760; /* @kind font */
+  --fw-black:   860; /* @kind font */
+
+  /* Line heights */
+  --lh-tight:   1.08; /* @kind font */
+  --lh-snug:    1.28; /* @kind font */
+  --lh-body:    1.65; /* @kind font */
+  --lh-loose:   1.8; /* @kind font */
+
+  --tracking-eyebrow: 0.04em; /* @kind font */
+}

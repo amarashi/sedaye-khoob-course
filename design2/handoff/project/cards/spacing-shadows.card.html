@@ -1,0 +1,21 @@
+<!-- @dsCard group="Spacing" viewport="700x180" name="Shadows & glows" subtitle="Indigo-tinted elevation + gold/crimson glows" -->
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<link rel="stylesheet" href="../styles.css">
+<style>
+  body { margin: 0; padding: 34px 26px; background: var(--color-surface); display: flex; align-items: center; gap: 26px; flex-wrap: wrap; }
+  .box { width: 100px; height: 72px; background: var(--color-surface); border-radius: var(--radius-md); display: grid; place-items: end center; padding-bottom: 8px; }
+  .lbl { font-family: var(--font-mono); font-size: 10px; color: var(--color-muted); }
+</style>
+</head>
+<body>
+  <div class="box" style="box-shadow:var(--shadow-xs)"><span class="lbl">xs</span></div>
+  <div class="box" style="box-shadow:var(--shadow-sm)"><span class="lbl">sm</span></div>
+  <div class="box" style="box-shadow:var(--shadow-md)"><span class="lbl">md</span></div>
+  <div class="box" style="box-shadow:var(--shadow-lg)"><span class="lbl">lg</span></div>
+  <div class="box" style="box-shadow:var(--shadow-gold)"><span class="lbl">gold</span></div>
+  <div class="box" style="box-shadow:var(--shadow-crimson)"><span class="lbl">crimson</span></div>
+</body>
+</html>

@@ -11,18 +11,18 @@
   };
 
   const designImages = {
-    notes: "assets/design/ostad-piano.png",
-    scales: "assets/design/ostad-tar.png",
-    chords: "assets/design/ostad-guitar.png",
-    rhythm: "assets/design/ostad-tombak.png",
-    fallback: "assets/design/ostad-piano.png",
+    notes: "assets/design/ostad-piano.webp",
+    scales: "assets/design/ostad-tar.webp",
+    chords: "assets/design/ostad-guitar.webp",
+    rhythm: "assets/design/ostad-tombak.webp",
+    fallback: "assets/design/ostad-piano.webp",
   };
 
   const testimonialImages = [
-    "assets/design/testimonial-piano.png",
-    "assets/design/testimonial-parts-8.png",
-    "assets/design/testimonial-parts-3.png",
-    "assets/design/testimonial-guitar.png",
+    "assets/design/testimonial-piano.webp",
+    "assets/design/testimonial-parts-8.webp",
+    "assets/design/testimonial-parts-3.webp",
+    "assets/design/testimonial-guitar.webp",
   ];
 
   const featureIcons = [
@@ -31,10 +31,12 @@
     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="8"></circle><path d="M12 8v4l3 2"></path></svg>',
   ];
 
+  const header = document.getElementById("siteHeader");
   const nav = document.getElementById("siteNav");
   const menuButton = document.querySelector(".menu-toggle");
   const checkoutForm = document.querySelector("[data-checkout-form]");
   const checkoutStatus = document.querySelector("[data-checkout-status]");
+  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
   let checkoutMessages = {};
   let modules = [];
   let activeModuleKey = null;
@@ -109,16 +111,19 @@
     element.replaceChildren();
   }
 
-  function renderSimpleTags(items) {
-    const container = document.querySelector("[data-render-list='course.orbit']");
+  function renderHeroStats(items) {
+    const container = document.querySelector("[data-render-list='hero.stats']");
     clear(container);
     if (!container || !Array.isArray(items)) return;
 
     items.forEach((item) => {
-      const tag = document.createElement("span");
-      tag.className = "tag";
-      tag.textContent = item;
-      container.append(tag);
+      const cell = document.createElement("div");
+      const value = document.createElement("strong");
+      value.textContent = item.value || "";
+      const label = document.createElement("span");
+      label.textContent = item.label || "";
+      cell.append(value, label);
+      container.append(cell);
     });
   }
 
@@ -139,18 +144,16 @@
     clear(board);
     if (!board || !Array.isArray(items)) return;
 
-    const line = document.createElement("div");
-    line.className = "orbit-line";
-    line.setAttribute("aria-hidden", "true");
-    board.append(line);
-
-    items.slice(0, 4).forEach((module) => {
-      const article = document.createElement("article");
-      article.className = "topic";
-      article.setAttribute("data-reveal", "");
+    items.slice(0, 4).forEach((module, index) => {
+      const figure = document.createElement("figure");
+      figure.className = `mod-orb${index === 0 ? " is-active" : ""}`;
+      figure.dataset.module = module.id || `module-${index}`;
+      figure.setAttribute("data-reveal", "");
+      figure.tabIndex = 0;
+      figure.setAttribute("role", "button");
 
       const visual = document.createElement("div");
-      visual.className = "topic-visual";
+      visual.className = "mod-orb__visual";
       const image = document.createElement("img");
       image.src = imageForModule(module);
       image.alt = module.title || module.label || "";
@@ -158,13 +161,11 @@
       image.decoding = "async";
       visual.append(image);
 
-      const title = document.createElement("h3");
-      title.textContent = module.label || "";
-      const text = document.createElement("p");
-      text.textContent = module.topicText || module.text || "";
+      const caption = document.createElement("figcaption");
+      caption.textContent = module.label || "";
 
-      article.append(visual, title, text);
-      board.append(article);
+      figure.append(visual, caption);
+      board.append(figure);
     });
   }
 
@@ -184,7 +185,7 @@
       const title = document.createElement("h3");
       title.textContent = module.label || module.title || "";
       const text = document.createElement("p");
-      text.textContent = module.stepText || module.text || "";
+      text.textContent = module.text || "";
 
       step.append(title, text);
       container.append(step);
@@ -221,6 +222,14 @@
       const card = document.createElement("article");
       card.className = "feature";
       card.setAttribute("data-reveal", "");
+      if (outcome.image) {
+        const image = document.createElement("img");
+        image.src = normaliseAssetPath(outcome.image);
+        image.alt = "";
+        image.loading = "lazy";
+        image.decoding = "async";
+        card.append(image);
+      }
       const title = document.createElement("h3");
       title.textContent = outcome.title || "";
       const text = document.createElement("p");
@@ -291,6 +300,7 @@
       const link = document.createElement("a");
       link.href = method.href || "#";
       link.textContent = method.value || "";
+      if (/^\+?\d/.test(method.value || "")) link.dir = "ltr";
       heading.append(link);
       card.append(label, heading);
       grid.append(card);
@@ -316,7 +326,7 @@
     });
 
     modules = Array.isArray(content.curriculum?.modules) ? content.curriculum.modules : [];
-    renderSimpleTags(content.course?.orbit);
+    renderHeroStats(content.hero?.stats);
     renderList("[data-render-list='studio.features']", content.studio?.features);
     renderList("[data-render-list='checkout.benefits']", content.checkout?.benefits);
     renderTopics(modules);
@@ -326,8 +336,128 @@
     renderTestimonials(content.testimonials?.items);
     renderContactMethods(content.contact?.methods);
     setupInteractiveBehaviour();
+    setupStickyNav();
+    setupHeroMotion(content);
+    setupScrollReveals();
 
     if (modules[0]) setModule(modules[0].id || "notes");
+  }
+
+  /* Split the hero title into plain + spectrum-gradient line spans so the
+     entrance can stagger them (mirrors the design's data-anim="line"). */
+  function splitHeroTitle(highlight) {
+    const title = document.getElementById("heroTitle");
+    if (!title || title.dataset.split === "true") return;
+    const text = (title.textContent || "").trim();
+    if (!text) return;
+
+    const hl = String(highlight || "").trim();
+    const at = hl ? text.indexOf(hl) : -1;
+    title.textContent = "";
+
+    const addLine = (chunk, isHighlight) => {
+      if (!chunk) return;
+      const span = document.createElement("span");
+      span.className = isHighlight ? "line hl spectrum-text" : "line";
+      span.textContent = chunk;
+      title.append(span);
+    };
+
+    if (at === -1) {
+      addLine(text, false);
+    } else {
+      const before = text.slice(0, at).trim();
+      const after = text.slice(at + hl.length).trim();
+      addLine(before, false);
+      if (before) title.append(" ");
+      addLine(hl, true);
+      if (after) {
+        title.append(" ");
+        addLine(after, false);
+      }
+    }
+    title.dataset.split = "true";
+  }
+
+  function setupStickyNav() {
+    if (!header || header.dataset.ready === "true") return;
+    header.dataset.ready = "true";
+    const onScroll = () => header.classList.toggle("is-stuck", window.scrollY > 80);
+    window.addEventListener("scroll", onScroll, { passive: true });
+    onScroll();
+  }
+
+  /* Hero entrance + perpetual motion — the design's night-stage timeline. */
+  function setupHeroMotion(content) {
+    const hero = document.querySelector(".hero");
+    if (!hero || hero.dataset.animated === "true") return;
+    hero.dataset.animated = "true";
+    splitHeroTitle(content.hero?.titleHighlight);
+    if (!window.gsap || prefersReducedMotion.matches) return;
+
+    const g = window.gsap;
+    const tl = g.timeline({ defaults: { ease: "power3.out" } });
+    tl.from(".hero-spot", { opacity: 0, scale: 0.6, duration: 1.1, ease: "power2.out" })
+      .from(".topnav-inner", { y: -24, autoAlpha: 0, duration: 0.6, clearProps: "all" }, 0.1)
+      .from("[data-anim='logo']", { y: 50, autoAlpha: 0, scale: 0.9, duration: 1.05 }, 0.25)
+      .from("#heroTitle .line", { y: 28, autoAlpha: 0, duration: 0.65, stagger: 0.12 }, 0.7)
+      .from("[data-anim='lead']", { y: 18, autoAlpha: 0, duration: 0.55 }, 0.9)
+      .from("[data-anim='cta'] > *", { y: 16, autoAlpha: 0, duration: 0.5, stagger: 0.1, clearProps: "all" }, 1.0)
+      .from(".hero-stats > div", { y: 14, autoAlpha: 0, duration: 0.45, stagger: 0.08 }, 1.1)
+      .from(".hero-maestro", { y: 60, autoAlpha: 0, duration: 0.9, ease: "power2.out" }, 0.6)
+      .from(".orchestra-podium", { scale: 0.3, autoAlpha: 0, duration: 0.8 }, 0.75)
+      .from(".orb", { scale: 0, autoAlpha: 0, duration: 0.7, stagger: 0.14, ease: "back.out(1.8)" }, 0.8)
+      .from(".hero-note", { autoAlpha: 0, scale: 0.4, duration: 0.6, stagger: 0.1 }, 1.0);
+
+    // perpetual float
+    g.utils.toArray(".orb").forEach((orb, index) => {
+      g.to(orb, {
+        y: `+=${18}`,
+        rotation: index % 2 ? 3 : -3,
+        duration: 3 + index * 0.4,
+        repeat: -1,
+        yoyo: true,
+        ease: "sine.inOut",
+        delay: index * 0.3,
+      });
+    });
+    g.to(".hero-maestro", { y: "-=8", duration: 4, repeat: -1, yoyo: true, ease: "sine.inOut" });
+    g.to("[data-anim='logo']", { y: "-=6", duration: 5, repeat: -1, yoyo: true, ease: "sine.inOut", delay: 1.4 });
+
+    // pointer parallax over depth-tagged layers
+    if (window.matchMedia("(pointer: fine)").matches) {
+      const layers = g.utils.toArray(".hero [data-depth]");
+      hero.addEventListener("pointermove", (event) => {
+        const rect = hero.getBoundingClientRect();
+        const dx = (event.clientX - (rect.left + rect.width / 2)) / rect.width;
+        const dy = (event.clientY - (rect.top + rect.height / 2)) / rect.height;
+        layers.forEach((layer) => {
+          const depth = parseFloat(layer.dataset.depth) || 0;
+          g.to(layer, { x: -dx * 36 * depth, y: -dy * 26 * depth, duration: 0.6, ease: "power2.out", overwrite: "auto" });
+        });
+      });
+    }
+  }
+
+  /* Scroll-triggered reveals; elements stay visible without GSAP. */
+  function setupScrollReveals() {
+    const elements = Array.from(document.querySelectorAll("[data-reveal]"));
+    if (!elements.length || prefersReducedMotion.matches) return;
+
+    if (window.gsap && window.ScrollTrigger) {
+      gsap.registerPlugin(ScrollTrigger);
+      elements.forEach((element) => {
+        if (element.dataset.revealed === "true") return;
+        element.dataset.revealed = "true";
+        gsap.fromTo(element, { opacity: 0, y: 28 }, {
+          opacity: 1,
+          y: 0,
+          duration: 0.7,
+          ease: "power3.out",
+          scrollTrigger: { trigger: element, start: "top 86%", once: true },
+        });
+      });
+    }
   }
 
   function renderModuleContent(module) {
@@ -340,26 +470,22 @@
     }
   }
 
-  function setFocusProgress(progress) {
-    const stage = document.querySelector(".focus-stage");
-    stage?.style.setProperty("--focus-progress", String(Math.max(0, Math.min(1, progress))));
-  }
-
   function setModule(key) {
     const selected = modules.find((module) => module.id === key) || modules[0];
     if (!selected || selected.id === activeModuleKey) return;
     activeModuleKey = selected.id;
-    const steps = Array.from(document.querySelectorAll(".focus-step"));
 
-    steps.forEach((step, index) => {
+    document.querySelectorAll(".focus-step").forEach((step) => {
       const isActive = step.dataset.module === selected.id;
       step.classList.toggle("is-active", isActive);
       if (isActive) {
         step.setAttribute("aria-current", "step");
-        setFocusProgress(steps.length > 1 ? index / (steps.length - 1) : 1);
       } else {
         step.removeAttribute("aria-current");
       }
+    });
+    document.querySelectorAll(".mod-orb").forEach((orb) => {
+      orb.classList.toggle("is-active", orb.dataset.module === selected.id);
     });
 
     renderModuleContent(selected);
@@ -381,6 +507,14 @@
     dots.forEach((dot, index) => dot.classList.toggle("is-active", index === testimonialIndex));
   }
 
+  function activateOnKeys(element, action) {
+    element.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter" && event.key !== " " && event.key !== "Spacebar") return;
+      event.preventDefault();
+      action();
+    });
+  }
+
   function setupInteractiveBehaviour() {
     menuButton?.addEventListener("click", () => {
       const open = nav?.classList.toggle("is-open");
@@ -394,18 +528,20 @@
         event.preventDefault();
         nav?.classList.remove("is-open");
         menuButton?.setAttribute("aria-expanded", "false");
-        const top = target.getBoundingClientRect().top + window.pageYOffset - 96;
+        const top = target.getBoundingClientRect().top + window.pageYOffset - 84;
         window.scrollTo({ top, behavior: "smooth" });
       });
     });
 
     document.querySelectorAll(".focus-step").forEach((step) => {
       step.addEventListener("click", () => setModule(step.dataset.module));
-      step.addEventListener("keydown", (event) => {
-        if (event.key !== "Enter" && event.key !== " " && event.key !== "Spacebar") return;
-        event.preventDefault();
-        setModule(step.dataset.module);
-      });
+      activateOnKeys(step, () => setModule(step.dataset.module));
+    });
+
+    document.querySelectorAll(".mod-orb").forEach((orb) => {
+      orb.addEventListener("mouseenter", () => setModule(orb.dataset.module));
+      orb.addEventListener("click", () => setModule(orb.dataset.module));
+      activateOnKeys(orb, () => setModule(orb.dataset.module));
     });
 
     document.querySelectorAll(".testimonial-card").forEach((card, index) => {
@@ -424,18 +560,6 @@
       });
     });
     renderCarouselState();
-
-    if ("IntersectionObserver" in window) {
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) entry.target.classList.add("is-visible");
-        });
-      }, { threshold: 0.14 });
-
-      document.querySelectorAll("[data-reveal]").forEach((element) => observer.observe(element));
-    } else {
-      document.querySelectorAll("[data-reveal]").forEach((element) => element.classList.add("is-visible"));
-    }
   }
 
   function normaliseDigits(value) {
