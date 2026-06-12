@@ -573,10 +573,10 @@ h3, .h3 { font-size: var(--fs-h3); line-height: 1.28; font-weight: var(--fw-semi
   height: auto;
   margin-inline: auto;
   filter:
-    drop-shadow(0 30px 60px rgba(0, 0, 0, 0.55))
-    drop-shadow(0 0 13px color-mix(in oklch, var(--gold-100) 78%, transparent))
-    drop-shadow(0 10px 38px color-mix(in oklch, var(--gold-400) 72%, transparent))
-    drop-shadow(0 0 80px color-mix(in oklch, var(--gold-400) 45%, transparent))
+    drop-shadow(0 30px 60px rgba(99, 57, 248, 0.55))
+    drop-shadow(0 0 13px color-mix(in oklch, var(--gold-100) 50%, transparent))
+    drop-shadow(0 10px 38px color-mix(in oklch, var(--gold-400) 50%, transparent))
+    drop-shadow(0 0 80px color-mix(in oklch, var(--gold-400) 35%, transparent))
     saturate(1.12) contrast(1.05);
   will-change: transform;
 }
