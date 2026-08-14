@@ -50,6 +50,37 @@ SMTP_FROM="Nicevoice <orders@example.com>"
 
 Use sandbox/test values first. Switch to production only after the full payment callback and Spot Player licence flow works end to end.
 
+## Connecting Spot Player
+
+1. Copy the API key from the Spot Player panel (settings → API) into `SPOTPLAYER_API`.
+2. List your courses and copy the ID of the one you sell:
+
+   ```powershell
+   npm run spotplayer courses
+   ```
+
+   Put the ID(s) in `SPOTPLAYER_COURSE_IDS` (comma-separated; several IDs are bundled into a single licence).
+3. Set device limits. `SPOTPLAYER_ALLOWED_DEVICES` (`p0`) caps total concurrent devices; the per-platform values cap a single platform, and `0` means "no platform-specific cap". Each is 0–99.
+4. Leave `SPOTPLAYER_MODE=test` for the first live-ish run — test licences are issued but not billed against your quota. Switch to `production` only after a test purchase works.
+5. Set `SPOTPLAYER_ENABLED=true` and restart. The server prints its Spot Player status at boot:
+
+   ```text
+   Spot Player issuing is ENABLED in test mode for course(s): 6xxxxxxxxxxxxxxxxxxxxxxx
+   ```
+
+   If it prints `enabled but NOT usable`, fix the reported setting before taking payments.
+
+### Operator commands
+
+```powershell
+npm run spotplayer courses          # list course IDs
+npm run spotplayer pending          # paid orders that have no licence yet
+npm run spotplayer retry            # issue licences for all pending orders
+npm run spotplayer retry <orderId>  # issue the licence for one order
+```
+
+`retry` skips any order that already has a licence key, so it is safe to run repeatedly. It is a CLI rather than an HTTP endpoint so that no unauthenticated route can mint licences.
+
 ## Running locally
 
 ```powershell
@@ -68,7 +99,8 @@ http://localhost:3000
 - Back up `data/orders.sqlite`; it is the order database.
 - Admin email notifications are optional. They are enabled only when `ADMIN_NOTIFICATION_EMAIL`, `SMTP_HOST`, and `SMTP_FROM` are set.
 - Do not enable Spot Player issuing until the course ID and device limits have been confirmed in the Spot Player panel.
-- If a payment is verified but Spot Player issuing fails, the order status becomes `paid_licence_pending` so it can be handled manually without losing the payment record.
+- If a payment is verified but Spot Player issuing fails, the licence call is retried three times and then the order status becomes `paid_licence_pending` so it can be recovered with `npm run spotplayer retry` without losing the payment record. Never delete these orders — they represent money already taken.
+- The licence `url` returned by Spot Player is a domain-less path; the backend stores it as a full `https://dl.spotplayer.ir/...` link so the buyer's download link resolves.
 - There is intentionally no unauthenticated admin order list. Inspect/export orders directly from SQLite or add an authenticated admin panel later.
 
 ## Provider notes

@@ -12,15 +12,27 @@ This project can run on a small Ubuntu or Debian VPS. It does not need an expens
 
 ## Server packages
 
-Install Node.js 18 or newer, Nginx, Git, compiler tools for native Node packages, and optional SQLite tooling:
+Install Node.js 22.18 or newer, Nginx, Git, and optional SQLite tooling:
 
 ```bash
 sudo apt update
-sudo apt install -y git nginx sqlite3 build-essential python3
+sudo apt install -y git nginx sqlite3
 node --version
 ```
 
-If the distribution package is older than Node 18, install a current LTS Node.js package before continuing.
+Node **22.18 or newer is required** — the app stores orders via the built-in `node:sqlite` module, which is only unflagged from 22.13 and only accepts bare named parameters from 22.18. If the distribution package is older, install a current LTS Node.js before continuing.
+
+There are no native modules and no compiler is needed, which matters on an Iranian server: the previous `better-sqlite3` dependency fetched a prebuilt binary from GitHub and fell back to compiling it, and both of those steps are unreliable from inside Iran.
+
+### npm from an Iranian server
+
+`registry.npmjs.org` is frequently unreachable from Iranian networks. If `npm ci` stalls or fails, point npm at a domestic mirror before installing:
+
+```bash
+npm config set registry https://mirror.abrha.net/repository/npm/
+```
+
+The three remaining dependencies (`express`, `dotenv`, `nodemailer`) are pure JavaScript, so a mirror is all that is needed.
 
 ## App setup
 

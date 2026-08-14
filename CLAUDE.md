@@ -9,7 +9,7 @@ A single-page, Persian/RTL course landing site for "Sedaye Khoob" (صدای خو
 ## Commands
 
 ```bash
-npm install          # native better-sqlite3 needs build tools (build-essential/python3 on Linux)
+npm install          # pure-JS deps only — no native modules, no compiler needed
 cp .env.example .env # configure before first run
 npm start            # node server/index.js -> http://localhost:3000
 npm run validate     # syntax-check server JS + assert content/site.json parses (this is the only "test")
@@ -29,13 +29,15 @@ So content edits are data-only (`content/site.json`); structural/markup changes 
 
 ### Checkout / payment / licence flow ([server/index.js](server/index.js))
 
-Everything is in one file. Orders persist to SQLite at `data/orders.sqlite` (auto-created; WAL mode; schema defined inline, with `ensureColumn` for lightweight migrations). The `orders.status` column is the state machine — key states: `created` → (`manual_review` | `payment_pending`) → `paid` → `licence_issued`, with failure branches `payment_cancelled`, `payment_failed`, `failed`, and the important `paid_licence_pending` (payment captured but licence not issued — never drop these, they represent owed money).
+The HTTP/order layer is all in one file (the Spot Player client is the one extraction — see below). Orders persist to SQLite at `data/orders.sqlite` (auto-created; WAL mode; schema defined inline, with `ensureColumn` for lightweight migrations). The `orders.status` column is the state machine — key states: `created` → (`manual_review` | `payment_pending`) → `paid` → `licence_issued`, with failure branches `payment_cancelled`, `payment_failed`, `failed`, and the important `paid_licence_pending` (payment captured but licence not issued — never drop these, they represent owed money).
 
 Flow: `POST /api/orders` validates + inserts, then branches on `PAYMENT_PROVIDER`:
 - `manual` → order parked in `manual_review`, returns 202 (no gateway configured yet).
 - `zarinpal` → `createZarinPalPayment` requests an authority, returns a `paymentUrl` the client redirects to.
 
-`GET /api/payments/zarinpal/callback` verifies the payment (`verifyZarinPalPayment`), marks it `paid`, then calls `issueSpotPlayerLicence` (POST to `panel.spotplayer.ir`), and redirects to `payment-result.html`. [payment-result.js](payment-result.js) polls `GET /api/orders/:id` (which returns the sanitised `publicOrder` shape — never raw DB rows) to show the licence.
+`GET /api/payments/zarinpal/callback` verifies the payment (`verifyZarinPalPayment`), marks it `paid`, then calls `issueSpotPlayerLicence`, and redirects to `payment-result.html`. [payment-result.js](payment-result.js) polls `GET /api/orders/:id` (which returns the sanitised `publicOrder` shape — never raw DB rows) to show the licence.
+
+The Spot Player API client itself lives in [server/spotplayer.js](server/spotplayer.js) (`POST panel.spotplayer.ir/license/edit/` with `$API` + `$LEVEL: -1` headers; business errors arrive as `ex.msg` inside an HTTP 200 body). It is shared with [scripts/spotplayer-admin.js](scripts/spotplayer-admin.js), the operator CLI (`npm run spotplayer courses|pending|retry`) used to discover course IDs and to re-issue licences for orders stuck in `paid_licence_pending`. Note the panel returns `url` as a domain-less path — `absoluteLicenceUrl` prefixes `https://dl.spotplayer.ir`, without which the buyer's download link resolves against our own domain and 404s.
 
 To swap payment providers, replace only `createZarinPalPayment`/`verifyZarinPalPayment` and keep the surrounding order + Spot Player flow (see [CHECKOUT_SETUP.md](CHECKOUT_SETUP.md)).
 
@@ -51,6 +53,13 @@ All behaviour is env-driven via `.env` (loaded by `dotenv`); see [.env.example](
 - There is intentionally **no** unauthenticated admin/order-list endpoint. Inspect orders via SQLite directly.
 - Test with `PAYMENT_PROVIDER=manual`, then ZarinPal sandbox (`ZARINPAL_SANDBOX=true`), before going live.
 - Deployment is a systemd service + Nginx reverse proxy on a Linux VPS — see [LINUX_DEPLOYMENT.md](LINUX_DEPLOYMENT.md) and `scripts/linux/`.
+
+## Design context
+
+Two root files carry the design brief; read them before changing anything visual.
+
+- **[PRODUCT.md](PRODUCT.md)** — strategic. Register is `brand` (the page's job is to convince), platform `web`. Audience is Persian-speaking complete beginners; success is completed purchases; the visitor's blocker is trust in an unfamiliar seller, not price. Positioning: theory you *hear*, not memorise (**شنیدن قبل از حفظ کردن**). Also holds the anti-references and the note that the testimonials and contact details in `content/site.json` are placeholders, not proof.
+- **[DESIGN.md](DESIGN.md)** — visual. The "Night Stage" system: two registers (indigo night bands vs sky-paper day pages), Spotlight Gold for the primary action, one variable Persian family (Estedad), rendered ostad illustrations instead of icons. `.impeccable/design.json` is its machine-readable sidecar.
 
 ## design2/
 

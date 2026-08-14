@@ -7,14 +7,15 @@
   "scripts": {
     "start": "node server/index.js",
     "check": "node --check server/index.js",
-    "validate": "node --check server/index.js && node --check server/content-renderer.js && node -e \"JSON.parse(require('fs').readFileSync('content/site.json', 'utf8')); console.log('content/site.json is valid JSON')\"",
+    "spotplayer": "node scripts/spotplayer-admin.js",
+    "validate": "node --check server/index.js && node --check server/content-renderer.js && node --check server/spotplayer.js && node --check scripts/spotplayer-admin.js && node -e \"JSON.parse(require('fs').readFileSync('content/site.json', 'utf8')); console.log('content/site.json is valid JSON')\"",
     "build": "npm run validate"
   },
   "engines": {
-    "node": ">=18 <24"
+    "node": ">=22.18"
   },
   "dependencies": {
-    "better-sqlite3": "^11.10.0",
+    "compression": "^1.8.1",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "nodemailer": "^8.0.10"

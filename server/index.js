@@ -4,10 +4,12 @@ const crypto = require("crypto");
 const fs = require("fs");
 const path = require("path");
 
-const Database = require("better-sqlite3");
+const { DatabaseSync } = require("node:sqlite");
+const compression = require("compression");
 const express = require("express");
 const nodemailer = require("nodemailer");
 const { readContent, renderIndex } = require("./content-renderer");
+const spotPlayer = require("./spotplayer");
 
 const rootDir = path.resolve(__dirname, "..");
 const dataDir = path.join(rootDir, "data");
@@ -32,23 +34,6 @@ const config = {
   paymentProvider: (process.env.PAYMENT_PROVIDER || "manual").toLowerCase(),
   zarinpalMerchantId: process.env.ZARINPAL_MERCHANT_ID || "",
   zarinpalSandbox: process.env.ZARINPAL_SANDBOX !== "false",
-  spotPlayerEnabled: process.env.SPOTPLAYER_ENABLED === "true",
-  spotPlayerApi: process.env.SPOTPLAYER_API || "",
-  spotPlayerMode: process.env.SPOTPLAYER_MODE || "test",
-  spotPlayerCourseIds: (process.env.SPOTPLAYER_COURSE_IDS || "")
-    .split(",")
-    .map((item) => item.trim())
-    .filter(Boolean),
-  spotPlayerWatermarkTemplate: process.env.SPOTPLAYER_WATERMARK_TEMPLATE || "{name} | {mobile}",
-  spotPlayerDevice: {
-    p0: Number(process.env.SPOTPLAYER_ALLOWED_DEVICES || 2),
-    p1: Number(process.env.SPOTPLAYER_WINDOWS || 0),
-    p2: Number(process.env.SPOTPLAYER_MACOS || 0),
-    p3: Number(process.env.SPOTPLAYER_UBUNTU || 0),
-    p4: Number(process.env.SPOTPLAYER_ANDROID || 0),
-    p5: Number(process.env.SPOTPLAYER_IOS || 0),
-    p6: Number(process.env.SPOTPLAYER_WEBAPP || 2),
-  },
   adminNotificationEmail: process.env.ADMIN_NOTIFICATION_EMAIL || "",
   smtp: {
     host: process.env.SMTP_HOST || "",
@@ -62,8 +47,8 @@ const config = {
 
 const mailTransporter = createMailTransporter(config.smtp);
 
-const db = new Database(path.join(dataDir, "orders.sqlite"));
-db.pragma("journal_mode = WAL");
+const db = new DatabaseSync(path.join(dataDir, "orders.sqlite"));
+db.exec("PRAGMA journal_mode = WAL;");
 db.exec(`
   CREATE TABLE IF NOT EXISTS orders (
     id TEXT PRIMARY KEY,
@@ -122,6 +107,20 @@ const updateOrder = db.prepare(`
 `);
 
 app.disable("x-powered-by");
+
+/* Text responses go out raw otherwise — the rendered page, the stylesheet and
+   the scripts are ~230 kB of that, which is the single biggest cost on the
+   Iranian mobile connections this site is bought on. Brotli when the browser
+   offers it, gzip otherwise; already-compressed bytes (WebP, WOFF2) are
+   skipped by the default `compressible` filter.
+   Brotli's default quality here is 4, which loses to gzip on these files; 6
+   wins by ~15% for a couple of milliseconds on a page this size. */
+app.use(
+  compression({
+    brotli: { params: { [require("node:zlib").constants.BROTLI_PARAM_QUALITY]: 6 } },
+  })
+);
+
 app.use(express.json({ limit: "32kb" }));
 
 app.use(
@@ -364,7 +363,11 @@ app.get("/api/payments/zarinpal/callback", async (request, response) => {
 
     notifyAdminOrderEvent(paymentVerified ? "Paid order needs licence review" : "Payment verification failed", getOrder.get(order.id));
 
-    return response.redirect(`/payment-result.html?status=failed&order=${encodeURIComponent(order.id)}`);
+    // The money was taken even though the licence failed, so the buyer must not
+    // be told the payment failed; payment-result.html explains the pending state.
+    return response.redirect(
+      `/payment-result.html?status=${paymentVerified ? "success" : "failed"}&order=${encodeURIComponent(order.id)}`
+    );
   }
 });
 
@@ -379,7 +382,25 @@ app.get("/api/orders/:id", (request, response) => {
 
 app.listen(port, () => {
   console.log(`Checkout server listening on ${publicBaseUrl}`);
+  reportSpotPlayerConfig();
 });
+
+// Surfaced at boot rather than at the first payment: a misconfigured key would
+// otherwise only be discovered after a real buyer has already been charged.
+function reportSpotPlayerConfig() {
+  if (!spotPlayer.config.enabled) {
+    console.log("Spot Player issuing is DISABLED (SPOTPLAYER_ENABLED != true). Paid orders will park in paid_licence_pending.");
+    return;
+  }
+  try {
+    spotPlayer.assertConfigured();
+    console.log(
+      `Spot Player issuing is ENABLED in ${spotPlayer.config.mode} mode for course(s): ${spotPlayer.config.courseIds.join(", ")}`
+    );
+  } catch (error) {
+    console.error(`Spot Player is enabled but NOT usable: ${error.message}`);
+  }
+}
 
 function parseOrderRequest(body) {
   body = body || {};
@@ -576,8 +597,11 @@ function ensureZarinPalConfig() {
   }
 }
 
+// Issues the licence for an already-paid order and records it. Throws on
+// failure so the caller can park the order in `paid_licence_pending` — money is
+// already captured at this point, so a failure must never be swallowed.
 async function issueSpotPlayerLicence(order) {
-  if (!config.spotPlayerEnabled) {
+  if (!spotPlayer.config.enabled) {
     updateOrder.run({
       id: order.id,
       updatedAt: new Date().toISOString(),
@@ -594,23 +618,19 @@ async function issueSpotPlayerLicence(order) {
     return;
   }
 
-  if (!config.spotPlayerApi || config.spotPlayerCourseIds.length === 0) {
-    throw new Error("SPOTPLAYER_API and SPOTPLAYER_COURSE_IDS are required before issuing licences.");
-  }
-
-  const watermarkText = config.spotPlayerWatermarkTemplate
-    .replaceAll("{name}", order.full_name)
-    .replaceAll("{mobile}", order.mobile)
-    .replaceAll("{email}", order.email || "");
-
-  const result = await spotPlayerRequest("https://panel.spotplayer.ir/license/edit/", {
-    test: config.spotPlayerMode === "test",
-    name: order.full_name,
-    course: config.spotPlayerCourseIds,
-    watermark: { texts: [{ text: watermarkText }] },
-    device: config.spotPlayerDevice,
-    payload: JSON.stringify({ orderId: order.id, mobile: order.mobile, email: order.email }),
-  });
+  const licence = await withRetries(() =>
+    spotPlayer.createLicence({
+      name: order.full_name,
+      watermarkText: spotPlayer.buildWatermark({
+        fullName: order.full_name,
+        mobile: order.mobile,
+        email: order.email,
+      }),
+      // Surfaced as a GET parameter on the Spot Player support page, so it
+      // carries the order id only — never the buyer's mobile or email.
+      payload: order.id,
+    })
+  );
 
   updateOrder.run({
     id: order.id,
@@ -620,32 +640,38 @@ async function issueSpotPlayerLicence(order) {
     paymentRefId: null,
     paymentRawJson: null,
     spotPlayerStatus: "issued",
-    spotPlayerLicenseId: result._id || null,
-    spotPlayerLicenseKey: result.key || null,
-    spotPlayerLicenseUrl: result.url || null,
+    spotPlayerLicenseId: licence.id,
+    spotPlayerLicenseKey: licence.key,
+    spotPlayerLicenseUrl: licence.url,
     errorMessage: null,
   });
 }
 
-async function spotPlayerRequest(url, payload) {
-  const result = await postJson(url, payload, {
-    "$API": config.spotPlayerApi,
-    "$LEVEL": "-1",
-  });
-
-  if (result?.ex?.msg) {
-    throw new Error(`Spot Player error: ${result.ex.msg}`);
+// A blip on the Spot Player side would otherwise strand a paid order in manual
+// review, so retry briefly before giving up.
+async function withRetries(task, attempts = 3, delayMs = 1500) {
+  let lastError;
+  for (let attempt = 1; attempt <= attempts; attempt += 1) {
+    try {
+      return await task();
+    } catch (error) {
+      lastError = error;
+      // Configuration errors will not fix themselves — fail immediately.
+      if (/^(SPOTPLAYER_|Spot Player device limit)/.test(error.message)) throw error;
+      if (attempt < attempts) {
+        console.error(`Spot Player attempt ${attempt}/${attempts} failed: ${error.message}`);
+        await new Promise((resolve) => setTimeout(resolve, delayMs * attempt));
+      }
+    }
   }
-
-  return result;
+  throw lastError;
 }
 
-async function postJson(url, payload, extraHeaders = {}) {
+async function postJson(url, payload) {
   const response = await fetch(url, {
     method: "POST",
     headers: {
       "content-type": "application/json",
-      ...extraHeaders,
     },
     body: JSON.stringify(removeUndefined(payload)),
   });

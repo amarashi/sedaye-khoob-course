@@ -25,12 +25,6 @@
     "assets/design/testimonial-guitar.webp",
   ];
 
-  const featureIcons = [
-    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 15c3 0 3-6 6-6s3 6 6 6 3-6 4-6"></path><path d="M4 19h16"></path></svg>',
-    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M5 4h14v16H5z"></path><path d="M8 8h8M8 12h6M8 16h4"></path></svg>',
-    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="8"></circle><path d="M12 8v4l3 2"></path></svg>',
-  ];
-
   const header = document.getElementById("siteHeader");
   const nav = document.getElementById("siteNav");
   const menuButton = document.querySelector(".menu-toggle");
@@ -139,24 +133,29 @@
     });
   }
 
+  /* The orb row is the curriculum's only control: a tablist whose selected orb
+     is the one under the spotlight, driving the single lesson panel below it. */
   function renderTopics(items) {
     const board = document.querySelector("[data-render-list='curriculum.topics']");
     clear(board);
     if (!board || !Array.isArray(items)) return;
 
     items.slice(0, 4).forEach((module, index) => {
+      const key = module.id || `module-${index}`;
       const figure = document.createElement("figure");
-      figure.className = `mod-orb${index === 0 ? " is-active" : ""}`;
-      figure.dataset.module = module.id || `module-${index}`;
-      figure.setAttribute("data-reveal", "");
-      figure.tabIndex = 0;
-      figure.setAttribute("role", "button");
+      figure.className = "mod-orb";
+      figure.id = `modtab-${key}`;
+      figure.dataset.module = key;
+      figure.setAttribute("role", "tab");
+      figure.setAttribute("aria-selected", String(index === 0));
+      figure.setAttribute("aria-controls", "modulePanel");
+      figure.tabIndex = index === 0 ? 0 : -1;
 
       const visual = document.createElement("div");
       visual.className = "mod-orb__visual";
       const image = document.createElement("img");
       image.src = imageForModule(module);
-      image.alt = module.title || module.label || "";
+      image.alt = "";
       image.loading = "lazy";
       image.decoding = "async";
       visual.append(image);
@@ -169,73 +168,52 @@
     });
   }
 
-  function renderFocusSteps(items) {
-    const container = document.querySelector("[data-render-list='curriculum.steps']");
-    clear(container);
-    if (!container || !Array.isArray(items)) return;
-
-    items.forEach((module, index) => {
-      const step = document.createElement("article");
-      step.className = `focus-step${index === 0 ? " is-active" : ""}`;
-      step.dataset.module = module.id || `module-${index}`;
-      step.tabIndex = 0;
-      step.setAttribute("role", "button");
-      if (index === 0) step.setAttribute("aria-current", "step");
-
-      const title = document.createElement("h3");
-      title.textContent = module.label || module.title || "";
-      const text = document.createElement("p");
-      text.textContent = module.text || "";
-
-      step.append(title, text);
-      container.append(step);
-    });
-  }
-
   function renderFeatureCards(items) {
-    const grid = document.querySelector("[data-render-list='studio.featureCards']");
-    clear(grid);
-    if (!grid || !Array.isArray(items)) return;
+    const list = document.querySelector("[data-render-list='studio.featureCards']");
+    clear(list);
+    if (!list || !Array.isArray(items)) return;
 
-    items.slice(0, 3).forEach((item, index) => {
-      const card = document.createElement("article");
-      card.className = "feature";
-      card.setAttribute("data-reveal", "");
-      const mark = document.createElement("div");
-      mark.className = "feature-mark";
-      mark.innerHTML = featureIcons[index % featureIcons.length];
+    items.slice(0, 3).forEach((item) => {
+      const row = document.createElement("article");
+      row.className = "method-item";
+      row.setAttribute("data-reveal", "");
       const title = document.createElement("h3");
       title.textContent = typeof item === "string" ? item : item.title || "";
       const body = document.createElement("p");
       body.textContent = typeof item === "string" ? item : item.text || "";
-      card.append(mark, title, body);
-      grid.append(card);
+      row.append(title, body);
+      list.append(row);
     });
   }
 
   function renderOutcomes(items) {
-    const grid = document.querySelector("[data-render-list='outcomes.items']");
-    clear(grid);
-    if (!grid || !Array.isArray(items)) return;
+    const list = document.querySelector("[data-render-list='outcomes.items']");
+    clear(list);
+    if (!list || !Array.isArray(items)) return;
 
     items.forEach((outcome) => {
-      const card = document.createElement("article");
-      card.className = "feature";
-      card.setAttribute("data-reveal", "");
+      const row = document.createElement("article");
+      row.className = "outcome";
+      row.setAttribute("data-reveal", "");
       if (outcome.image) {
+        const art = document.createElement("span");
+        art.className = "outcome__art";
         const image = document.createElement("img");
         image.src = normaliseAssetPath(outcome.image);
         image.alt = "";
         image.loading = "lazy";
         image.decoding = "async";
-        card.append(image);
+        art.append(image);
+        row.append(art);
       }
+      const copy = document.createElement("div");
       const title = document.createElement("h3");
       title.textContent = outcome.title || "";
       const text = document.createElement("p");
       text.textContent = outcome.text || "";
-      card.append(title, text);
-      grid.append(card);
+      copy.append(title, text);
+      row.append(copy);
+      list.append(row);
     });
   }
 
@@ -330,7 +308,6 @@
     renderList("[data-render-list='studio.features']", content.studio?.features);
     renderList("[data-render-list='checkout.benefits']", content.checkout?.benefits);
     renderTopics(modules);
-    renderFocusSteps(modules);
     renderFeatureCards(content.studio?.featureCards || content.studio?.features);
     renderOutcomes(content.outcomes?.items);
     renderTestimonials(content.testimonials?.items);
@@ -432,6 +409,18 @@
     return tl;
   }
 
+  /* The entrance flies the hero in *from* hidden, so it is only honest while
+     the hero is still fresh on screen. If GSAP arrived late — a slow
+     connection, exactly the visitor who can least afford it — the headline and
+     the buy button have already been read, and hiding them now would be a
+     flash rather than a reveal. Past that grace period the copy stays put and
+     only the perpetual motion runs. */
+  function heroEntranceIsStillFresh() {
+    if (document.visibilityState !== "visible") return false;
+    const paint = performance.getEntriesByName("first-contentful-paint")[0];
+    return !paint || performance.now() - paint.startTime < 600;
+  }
+
   /* Hero entrance + perpetual motion — the design's night-stage timeline. */
   function setupHeroMotion(content) {
     const hero = document.querySelector(".hero");
@@ -441,6 +430,11 @@
     if (!window.gsap || prefersReducedMotion.matches) return;
 
     const g = window.gsap;
+    if (!heroEntranceIsStillFresh()) {
+      setupHeroPerpetualMotion(g, hero);
+      return;
+    }
+
     const tl = g.timeline({ defaults: { ease: "power3.out" } });
     tl.from(".hero-spot", { opacity: 0, scale: 0.6, duration: 1.1, ease: "power2.out" })
       .from(".topnav-inner", { y: -24, autoAlpha: 0, duration: 0.6, clearProps: "all" }, 0.1)
@@ -455,7 +449,19 @@
       .from(".orb", { scale: 0, autoAlpha: 0, duration: 0.7, stagger: 0.14, ease: "back.out(1.8)" }, 0.8)
       .from(".hero-note", { autoAlpha: 0, scale: 0.4, duration: 0.6, stagger: 0.1 }, 1.0);
 
-    // perpetual float
+    /* Failsafe: the timeline is driven by requestAnimationFrame, which a
+       backgrounded tab or a headless renderer can starve indefinitely — and
+       everything above is mid-flight at opacity 0. setTimeout still fires
+       there, so the hero can never be left blank. */
+    const runtime = (tl.duration() + 1) * 1000;
+    setTimeout(() => { if (tl.progress() < 1) tl.progress(1); }, runtime * 2);
+
+    setupHeroPerpetualMotion(g, hero);
+  }
+
+  /* The floats and the pointer parallax — safe to run whether or not the
+     entrance played, since they never hide anything. */
+  function setupHeroPerpetualMotion(g, hero) {
     g.utils.toArray(".orb").forEach((orb, index) => {
       g.to(orb, {
         y: `+=${18}`,
@@ -485,56 +491,84 @@
     }
   }
 
-  /* Scroll-triggered reveals; elements stay visible without GSAP. */
+  /* Scroll-triggered reveals. Plain IntersectionObserver + a CSS transition:
+     the same 28px rise ScrollTrigger was doing, without the 44 kB plugin.
+     Only elements still below the fold are armed — anything already painted
+     stays painted, so a reveal can never hide what the reader can see. */
   function setupScrollReveals() {
     const elements = Array.from(document.querySelectorAll("[data-reveal]"));
-    if (!elements.length || prefersReducedMotion.matches) return;
+    if (!elements.length || prefersReducedMotion.matches || !("IntersectionObserver" in window)) return;
 
-    if (window.gsap && window.ScrollTrigger) {
-      gsap.registerPlugin(ScrollTrigger);
-      elements.forEach((element) => {
-        if (element.dataset.revealed === "true") return;
-        element.dataset.revealed = "true";
-        gsap.fromTo(element, { opacity: 0, y: 28 }, {
-          opacity: 1,
-          y: 0,
-          duration: 0.7,
-          ease: "power3.out",
-          scrollTrigger: { trigger: element, start: "top 86%", once: true },
-        });
+    const armed = elements.filter(
+      (element) => element.dataset.revealed !== "true" && element.getBoundingClientRect().top > window.innerHeight * 0.86
+    );
+    if (!armed.length) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("is-revealed");
+        observer.unobserve(entry.target);
       });
-    }
+    }, { rootMargin: "0px 0px -14% 0px" });
+
+    armed.forEach((element) => {
+      element.dataset.revealed = "true";
+      element.classList.add("is-armed");
+      observer.observe(element);
+    });
   }
 
-  function renderModuleContent(module) {
-    setText(document.getElementById("moduleTitle"), module?.title || "");
-    setText(document.getElementById("moduleText"), module?.text || "");
-    const image = document.getElementById("moduleImage");
-    if (image) {
-      image.src = imageForModule(module);
-      image.alt = module?.title || module?.label || "";
-    }
-  }
-
-  function setModule(key) {
+  function setModule(key, { focusTab = false } = {}) {
     const selected = modules.find((module) => module.id === key) || modules[0];
     if (!selected || selected.id === activeModuleKey) return;
+    const isSwap = activeModuleKey !== null;
     activeModuleKey = selected.id;
 
-    document.querySelectorAll(".focus-step").forEach((step) => {
-      const isActive = step.dataset.module === selected.id;
-      step.classList.toggle("is-active", isActive);
-      if (isActive) {
-        step.setAttribute("aria-current", "step");
-      } else {
-        step.removeAttribute("aria-current");
-      }
-    });
     document.querySelectorAll(".mod-orb").forEach((orb) => {
-      orb.classList.toggle("is-active", orb.dataset.module === selected.id);
+      const isActive = orb.dataset.module === selected.id;
+      orb.setAttribute("aria-selected", String(isActive));
+      orb.tabIndex = isActive ? 0 : -1;
+      if (isActive && focusTab) orb.focus();
     });
 
-    renderModuleContent(selected);
+    const panel = document.getElementById("modulePanel");
+    panel?.setAttribute("aria-labelledby", `modtab-${selected.id}`);
+    setText(document.getElementById("moduleTitle"), selected.title || "");
+    setText(document.getElementById("moduleText"), selected.text || "");
+
+    /* Re-trigger the swap animation only on a real change, so the panel is
+       never gated behind a transition on first paint. */
+    if (panel && isSwap) {
+      panel.classList.remove("is-swapping");
+      void panel.offsetWidth;
+      panel.classList.add("is-swapping");
+    }
+  }
+
+  function setupModuleTabs() {
+    const tablist = document.querySelector(".modgrid[role='tablist']");
+    if (!tablist) return;
+
+    const tabs = Array.from(tablist.querySelectorAll(".mod-orb"));
+    const rtl = getComputedStyle(tablist).direction === "rtl";
+
+    tabs.forEach((tab, index) => {
+      tab.addEventListener("click", () => setModule(tab.dataset.module));
+      tab.addEventListener("keydown", (event) => {
+        const step = { ArrowRight: rtl ? -1 : 1, ArrowLeft: rtl ? 1 : -1, ArrowDown: 1, ArrowUp: -1 }[event.key];
+        let target = null;
+
+        if (step !== undefined) target = tabs[(index + step + tabs.length) % tabs.length];
+        else if (event.key === "Home") target = tabs[0];
+        else if (event.key === "End") target = tabs[tabs.length - 1];
+        else if (event.key === "Enter" || event.key === " " || event.key === "Spacebar") target = tab;
+        else return;
+
+        event.preventDefault();
+        setModule(target.dataset.module, { focusTab: true });
+      });
+    });
   }
 
   function renderCarouselState() {
@@ -551,14 +585,6 @@
       card.tabIndex = offset === 0 ? 0 : -1;
     });
     dots.forEach((dot, index) => dot.classList.toggle("is-active", index === testimonialIndex));
-  }
-
-  function activateOnKeys(element, action) {
-    element.addEventListener("keydown", (event) => {
-      if (event.key !== "Enter" && event.key !== " " && event.key !== "Spacebar") return;
-      event.preventDefault();
-      action();
-    });
   }
 
   function setupInteractiveBehaviour() {
@@ -579,16 +605,7 @@
       });
     });
 
-    document.querySelectorAll(".focus-step").forEach((step) => {
-      step.addEventListener("click", () => setModule(step.dataset.module));
-      activateOnKeys(step, () => setModule(step.dataset.module));
-    });
-
-    document.querySelectorAll(".mod-orb").forEach((orb) => {
-      orb.addEventListener("mouseenter", () => setModule(orb.dataset.module));
-      orb.addEventListener("click", () => setModule(orb.dataset.module));
-      activateOnKeys(orb, () => setModule(orb.dataset.module));
-    });
+    setupModuleTabs();
 
     document.querySelectorAll(".testimonial-card").forEach((card, index) => {
       card.addEventListener("click", () => {

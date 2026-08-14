@@ -41,7 +41,6 @@ function renderIndex(template, content, options = {}) {
   html = setAttributeInFirstTag(html, /<input\b[^>]*\bname="email"[^>]*>/, "placeholder", content.checkout?.form?.emailPlaceholder || "");
   html = setAttributeInFirstTag(html, /<textarea\b[^>]*\bname="question"[^>]*>/, "placeholder", content.checkout?.form?.questionPlaceholder || "");
   html = setAttributeInFirstTag(html, /<div\b[^>]*\bclass="modgrid"[^>]*>/, "aria-label", content.curriculum?.boardLabel || "");
-  html = setAttributeInFirstTag(html, /<div\b[^>]*\bclass="focus-steps"[^>]*>/, "aria-label", content.curriculum?.tabsLabel || "");
   html = setAttributeInFirstTag(html, /<div\b[^>]*\bclass="testimonial-carousel"[^>]*>/, "aria-label", content.testimonials?.gridLabel || "");
   html = setAttributeInFirstTag(html, /<div\b[^>]*\bclass="contact-grid"[^>]*>/, "aria-label", content.contact?.methodsLabel || "");
 
@@ -55,7 +54,6 @@ function renderIndex(template, content, options = {}) {
   html = replaceDataList(html, "studio.features", renderFeatureItems(content.studio?.features));
   html = replaceDataList(html, "studio.featureCards", renderFeatureCards(content.studio?.featureCards || content.studio?.features));
   html = replaceDataList(html, "curriculum.topics", renderTopics(content.curriculum?.modules));
-  html = replaceDataList(html, "curriculum.steps", renderFocusSteps(content.curriculum?.modules));
   html = replaceDataList(html, "outcomes.items", renderOutcomes(content.outcomes?.items));
   html = replaceDataList(html, "about.paragraphs", renderParagraphs(content.about?.paragraphs));
   html = replaceDataList(html, "about.stats", renderStats(content.about?.stats));
@@ -230,18 +228,17 @@ function replaceDataList(html, path, renderedItems) {
   return html.replace(pattern, `$1${renderedItems || ""}$4`);
 }
 
-function renderInitialModule(html, module) {
+function renderInitialModule(html, module, index = 0) {
   if (!module) return html;
 
   html = html.replace(/(<h3\b[^>]*\bid="moduleTitle"[^>]*>)([\s\S]*?)(<\/h3>)/, `$1${escapeHtml(module.title || "")}$3`);
   html = html.replace(/(<p\b[^>]*\bid="moduleText"[^>]*>)([\s\S]*?)(<\/p>)/, `$1${escapeHtml(module.text || "")}$3`);
-  html = html.replace(/<img\b[^>]*\bid="moduleImage"[^>]*>/, (tag) => {
-    tag = setAttribute(tag, "src", module.image || "");
-    tag = setAttribute(tag, "alt", module.title || module.label || "");
-    tag = setAttribute(tag, "loading", "lazy");
-    tag = setAttribute(tag, "decoding", "async");
-    return setImageDimensions(tag, module.image);
-  });
+  html = setAttributeInFirstTag(
+    html,
+    /<div\b[^>]*\bid="modulePanel"[^>]*>/,
+    "aria-labelledby",
+    `modtab-${module.id || `module-${index}`}`,
+  );
 
   return html;
 }
@@ -251,7 +248,9 @@ function replaceSiteContentScript(html, content) {
   const pattern = /(<script\b[^>]*\bid="site-content"[^>]*>)([\s\S]*?)(<\/script>)/i;
   if (pattern.test(html)) return html.replace(pattern, `$1${json}$3`);
 
-  return html.replace(/<script src="script\.js(?:\?[^"]*)?"><\/script>/, (tag) => `<script id="site-content" type="application/json">${json}</script>\n    ${tag}`);
+  /* Fallback for a template that lost its placeholder tag: park the blob just
+     before the client script, whatever attributes that tag carries. */
+  return html.replace(/<script\b[^>]*\bsrc="script\.js(?:\?[^"]*)?"[^>]*><\/script>/i, (tag) => `<script id="site-content" type="application/json">${json}</script>\n    ${tag}`);
 }
 
 function replaceStructuredDataScript(html, data) {
@@ -308,10 +307,14 @@ function renderStats(items = []) {
 function renderOutcomes(items = []) {
   return items
     .map((item) => [
-      '<article class="feature" data-reveal>',
-      item.image ? `<img src="${escapeAttribute(item.image)}" alt="" loading="lazy" decoding="async">` : "",
+      '<article class="outcome" data-reveal>',
+      item.image
+        ? `<span class="outcome__art"><img src="${escapeAttribute(item.image)}" alt="" loading="lazy" decoding="async"></span>`
+        : "",
+      "<div>",
       `<h3>${escapeHtml(item.title || "")}</h3>`,
       `<p>${escapeHtml(item.text || "")}</p>`,
+      "</div>",
       "</article>",
     ].join(""))
     .join("");
@@ -348,12 +351,11 @@ function renderContactMethods(items = []) {
 function renderFeatureCards(items = []) {
   return items
     .slice(0, 3)
-    .map((item, index) => {
+    .map((item) => {
       const title = typeof item === "string" ? item : item.title || "";
       const text = typeof item === "string" ? item : item.text || "";
       return [
-        '<article class="feature" data-reveal>',
-        `<div class="feature-mark">${featureIcon(index)}</div>`,
+        '<article class="method-item" data-reveal>',
         `<h3>${escapeHtml(title)}</h3>`,
         `<p>${escapeHtml(text)}</p>`,
         "</article>",
@@ -362,30 +364,22 @@ function renderFeatureCards(items = []) {
     .join("");
 }
 
+/* The orb row is the curriculum's only control: a tablist whose selected orb
+   is the one under the spotlight, driving the single lesson panel below it. */
 function renderTopics(items = []) {
   return items
     .slice(0, 4)
-    .map((module, index) => [
-      `<figure class="mod-orb${index === 0 ? " is-active" : ""}" data-module="${escapeAttribute(module.id || `module-${index}`)}" data-reveal tabindex="0" role="button">`,
-      '<div class="mod-orb__visual">',
-      `<img src="${escapeAttribute(module.image || "")}" alt="${escapeAttribute(module.title || module.label || "")}" loading="lazy" decoding="async">`,
-      "</div>",
-      `<figcaption>${escapeHtml(module.label || "")}</figcaption>`,
-      "</figure>",
-    ].join(""))
-    .join("");
-}
-
-function renderFocusSteps(items = []) {
-  return items
     .map((module, index) => {
-      const activeClass = index === 0 ? " is-active" : "";
-      const ariaCurrent = index === 0 ? ' aria-current="step"' : "";
+      const key = module.id || `module-${index}`;
+      const selected = index === 0;
       return [
-        `<article class="focus-step${activeClass}" data-module="${escapeAttribute(module.id || `module-${index}`)}" tabindex="0" role="button"${ariaCurrent}>`,
-        `<h3>${escapeHtml(module.label || module.title || "")}</h3>`,
-        `<p>${escapeHtml(module.text || "")}</p>`,
-        "</article>",
+        `<figure class="mod-orb" id="modtab-${escapeAttribute(key)}" data-module="${escapeAttribute(key)}"`,
+        ` role="tab" aria-selected="${selected}" aria-controls="modulePanel" tabindex="${selected ? 0 : -1}">`,
+        '<div class="mod-orb__visual">',
+        `<img src="${escapeAttribute(module.image || "")}" alt="" loading="lazy" decoding="async">`,
+        "</div>",
+        `<figcaption>${escapeHtml(module.label || "")}</figcaption>`,
+        "</figure>",
       ].join("");
     })
     .join("");
@@ -415,58 +409,6 @@ function testimonialImage(index) {
     "assets/design/testimonial-guitar.webp",
   ];
   return images[index % images.length];
-}
-
-function featureIcon(index) {
-  const icons = [
-    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 15c3 0 3-6 6-6s3 6 6 6 3-6 4-6"></path><path d="M4 19h16"></path></svg>',
-    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M5 4h14v16H5z"></path><path d="M8 8h8M8 12h6M8 16h4"></path></svg>',
-    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="8"></circle><path d="M12 8v4l3 2"></path></svg>',
-  ];
-  return icons[index % icons.length];
-}
-
-function inferToneFromImage(imagePath = "") {
-  const imageName = String(imagePath).toLowerCase();
-  if (imageName.includes("item (14)")) return "keys";
-  if (imageName.includes("item (12)")) return "rhythm";
-  if (imageName.includes("item (11)") || imageName.includes("item (18)")) return "brass";
-  if (imageName.includes("item (10)")) return "voice";
-  if (imageName.includes("item (15)")) return "woodwind";
-  if (imageName.includes("item (16)") || imageName.includes("item (17)")) return "strings";
-  if (imageName.includes("item (6)") || imageName.includes("item (7)")) return "notation";
-  return "percussion";
-}
-
-function setImageDimensions(tag, imagePath = "") {
-  const size = imageDimensions(imagePath);
-  if (!size) return tag;
-
-  tag = setAttribute(tag, "width", String(size.width));
-  tag = setAttribute(tag, "height", String(size.height));
-  return tag;
-}
-
-function imageDimensionAttributes(imagePath = "") {
-  const size = imageDimensions(imagePath);
-  if (!size) return "";
-
-  return ` width="${size.width}" height="${size.height}"`;
-}
-
-function imageDimensions(imagePath = "") {
-  const imageName = String(imagePath).toLowerCase();
-  const match = imageName.match(/item \((\d+)\)/);
-  if (!match) return null;
-
-  return {
-    6: { width: 375, height: 500 },
-    7: { width: 567, height: 270 },
-    8: { width: 323, height: 386 },
-    12: { width: 307, height: 354 },
-    13: { width: 297, height: 354 },
-    14: { width: 374, height: 253 },
-  }[Number(match[1])] || null;
 }
 
 function escapeHtml(value) {

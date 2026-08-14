@@ -1,0 +1,208 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-08-13T00:00:00Z",
+  "title": "Design System: Sedaye Khoob",
+  "extensions": {
+    "colorMeta": {
+      "spotlight-gold": {
+        "role": "primary",
+        "displayName": "Spotlight Gold",
+        "canonical": "oklch(83% 0.13 84)",
+        "tonalRamp": ["oklch(20% 0.05 84)", "oklch(31% 0.07 84)", "oklch(43% 0.09 84)", "oklch(55% 0.11 84)", "oklch(66% 0.13 84)", "oklch(78% 0.14 82)", "oklch(88% 0.1 86)", "oklch(95% 0.05 88)"]
+      },
+      "curtain-indigo": {
+        "role": "secondary",
+        "displayName": "Curtain Indigo",
+        "canonical": "oklch(24% 0.13 274)",
+        "tonalRamp": ["oklch(18% 0.1 274)", "oklch(24% 0.13 274)", "oklch(28% 0.14 270)", "oklch(36% 0.22 274)", "oklch(42% 0.26 274)", "oklch(56% 0.22 274)", "oklch(83% 0.1 274)", "oklch(96% 0.02 274)"]
+      },
+      "stage-indigo": {
+        "role": "secondary",
+        "displayName": "Stage Indigo",
+        "canonical": "oklch(42% 0.26 274)",
+        "tonalRamp": ["oklch(24% 0.13 274)", "oklch(36% 0.22 274)", "oklch(42% 0.26 274)", "oklch(48% 0.25 274)", "oklch(56% 0.22 274)", "oklch(83% 0.1 274)", "oklch(91% 0.05 274)", "oklch(96% 0.02 274)"]
+      },
+      "velvet-crimson": {
+        "role": "tertiary",
+        "displayName": "Velvet Crimson",
+        "canonical": "oklch(58% 0.22 27)",
+        "tonalRamp": ["oklch(20% 0.08 26)", "oklch(30% 0.12 26)", "oklch(38% 0.16 26)", "oklch(46% 0.2 26)", "oklch(53% 0.225 26)", "oklch(58% 0.22 27)", "oklch(74% 0.14 26)", "oklch(96% 0.025 25)"]
+      },
+      "footlight-magenta": {
+        "role": "tertiary",
+        "displayName": "Footlight Magenta",
+        "canonical": "oklch(55% 0.25 350)",
+        "tonalRamp": ["oklch(20% 0.09 350)", "oklch(30% 0.14 350)", "oklch(40% 0.2 350)", "oklch(55% 0.25 350)", "oklch(63% 0.21 350)", "oklch(70% 0.17 350)", "oklch(84% 0.09 350)", "oklch(95% 0.03 350)"]
+      },
+      "house-blue": {
+        "role": "tertiary",
+        "displayName": "House Blue",
+        "canonical": "oklch(60% 0.18 250)",
+        "tonalRamp": ["oklch(22% 0.07 250)", "oklch(32% 0.1 250)", "oklch(42% 0.14 250)", "oklch(52% 0.17 250)", "oklch(60% 0.18 250)", "oklch(74% 0.13 248)", "oklch(87% 0.07 248)", "oklch(96% 0.02 248)"]
+      },
+      "sky-paper": {
+        "role": "neutral",
+        "displayName": "Sky Paper",
+        "canonical": "oklch(97.4% 0.02 226)",
+        "tonalRamp": ["oklch(22% 0.05 258)", "oklch(29% 0.07 250)", "oklch(52% 0.045 244)", "oklch(62% 0.035 240)", "oklch(86% 0.022 232)", "oklch(94% 0.032 228)", "oklch(97.4% 0.02 226)", "oklch(99.3% 0.006 220)"]
+      },
+      "stage-ink": {
+        "role": "neutral",
+        "displayName": "Stage Ink",
+        "canonical": "oklch(29% 0.07 250)",
+        "tonalRamp": ["oklch(22% 0.05 258)", "oklch(29% 0.07 250)", "oklch(40% 0.06 246)", "oklch(52% 0.045 244)", "oklch(62% 0.035 240)", "oklch(74% 0.03 236)", "oklch(86% 0.022 232)", "oklch(94% 0.012 228)"]
+      },
+      "deep-wine": {
+        "role": "neutral",
+        "displayName": "Deep Wine",
+        "canonical": "oklch(12.6% 0.052 29)",
+        "tonalRamp": ["oklch(12.6% 0.052 29)", "oklch(18.4% 0.072 28)", "oklch(29.8% 0.116 28)", "oklch(33% 0.055 26)", "oklch(48% 0.065 26)", "oklch(58% 0.03 28)", "oklch(72% 0.03 28)", "oklch(90% 0.012 30)"]
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Section-scale h1 on interior pages. Never the largest element in the hero — the calligraphic wordmark is." },
+      "headline": { "displayName": "Headline", "purpose": "Every section h2. The light 540 weight at large size is the system's signature typographic move." },
+      "title": { "displayName": "Title", "purpose": "Card and panel h3." },
+      "lead": { "displayName": "Lead", "purpose": "The one calm sentence under each heading. Muted ink, 60ch measure, 1.8 line-height." },
+      "body": { "displayName": "Body", "purpose": "Running Farsi text at 1.65 line-height with text-wrap: pretty." },
+      "label": { "displayName": "Label / Meta", "purpose": "Tiny Latin meta lines and tabular numerals only. The only place a mono stack appears." }
+    },
+    "shadows": [
+      { "name": "xs", "value": "0 2px 8px color-mix(in oklch, oklch(22% 0.05 258) 6%, transparent)", "purpose": "Checklist marks and small chips." },
+      { "name": "sm", "value": "0 12px 30px color-mix(in oklch, oklch(22% 0.05 258) 8%, transparent)", "purpose": "Resting indigo buttons and the active curriculum step." },
+      { "name": "md", "value": "0 22px 60px color-mix(in oklch, oklch(42% 0.26 274) 12%, transparent)", "purpose": "The standard card shadow: course card, form card, testimonial card, module orb." },
+      { "name": "lg", "value": "0 30px 74px color-mix(in oklch, oklch(42% 0.26 274) 16%, transparent)", "purpose": "The checkout night card and the open mobile menu." },
+      { "name": "gold", "value": "0 14px 30px color-mix(in oklch, oklch(78% 0.14 82) 38%, transparent)", "purpose": "Under gold CTAs only. Reads as spilled light, not weight." },
+      { "name": "inset-top", "value": "inset 0 1px 0 rgba(255, 255, 255, 0.76)", "purpose": "Highlight edge on every raised light surface." },
+      { "name": "wordmark-bloom", "value": "drop-shadow(0 30px 60px rgba(99, 57, 248, 0.55)) drop-shadow(0 0 13px color-mix(in oklch, oklch(95% 0.05 88) 50%, transparent)) drop-shadow(0 10px 38px color-mix(in oklch, oklch(83% 0.13 84) 50%, transparent)) drop-shadow(0 0 80px color-mix(in oklch, oklch(83% 0.13 84) 35%, transparent))", "purpose": "The hero wordmark's luminous shadow — a warm-white rim, a gold cast below, a wide ambient bloom." }
+    ],
+    "motion": [
+      { "name": "ease-out", "value": "cubic-bezier(0.2, 0, 0, 1)", "purpose": "Every entrance and state transition in the system." },
+      { "name": "dur-fast", "value": "120ms", "purpose": "Press feedback and transform response." },
+      { "name": "dur-base", "value": "220ms", "purpose": "Hover, colour, and border transitions." },
+      { "name": "dur-slow", "value": "520ms", "purpose": "Theme crossfade and carousel rotation." },
+      { "name": "orb-float", "value": "6.8s ease-in-out infinite", "purpose": "Perpetual gentle float on the active module orb's illustration." },
+      { "name": "hero-halo-aurora", "value": "18s ease-in-out infinite alternate", "purpose": "Slow hue drift of the blurred halo behind the wordmark." }
+    ],
+    "breakpoints": [
+      { "name": "lg", "value": "1040px" },
+      { "name": "md", "value": "900px" },
+      { "name": "nav", "value": "860px" },
+      { "name": "sm", "value": "640px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Gold Button",
+      "kind": "button",
+      "refersTo": "button-gold",
+      "description": "The primary action. Gold means press this.",
+      "html": "<button class=\"ds-btn-gold\">خرید دوره تئوری موسیقی</button>",
+      "css": ".ds-btn-gold { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 46px; padding: 11px 26px; border-radius: 999px; border: 1.5px solid var(--color-gold, oklch(83% 0.13 84)); background: var(--color-gold, oklch(83% 0.13 84)); color: var(--on-gold, oklch(22% 0.05 258)); font-size: 15px; font-weight: 760; line-height: 1; white-space: nowrap; box-shadow: 0 14px 30px color-mix(in oklch, oklch(78% 0.14 82) 38%, transparent); transition: transform 120ms cubic-bezier(0.2,0,0,1), background 220ms cubic-bezier(0.2,0,0,1), border-color 220ms cubic-bezier(0.2,0,0,1); } .ds-btn-gold:hover { background: var(--color-gold-hover, oklch(78% 0.14 82)); border-color: var(--color-gold-hover, oklch(78% 0.14 82)); } .ds-btn-gold:active { transform: translateY(1px) scale(0.99); } .ds-btn-gold:focus-visible { outline: 3px solid color-mix(in oklch, oklch(56% 0.22 274) 60%, transparent); outline-offset: 3px; }"
+    },
+    {
+      "name": "Ghost Night Button",
+      "kind": "button",
+      "refersTo": "button-ghost-night",
+      "description": "The only outline button permitted on night bands. Its arrow slides toward the RTL start edge.",
+      "html": "<button class=\"ds-btn-ghost-night\">دیدن درس‌ها</button>",
+      "css": ".ds-btn-ghost-night { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 46px; padding: 11px 26px; border-radius: 999px; background: transparent; color: oklch(96% 0.02 270); border: 1.5px solid color-mix(in oklch, oklch(96% 0.02 270) 30%, transparent); font-size: 15px; font-weight: 760; line-height: 1; transition: background 220ms cubic-bezier(0.2,0,0,1), transform 120ms cubic-bezier(0.2,0,0,1); } .ds-btn-ghost-night::before { content: \"←\"; transition: transform 220ms cubic-bezier(0.2,0,0,1); } .ds-btn-ghost-night:hover { background: color-mix(in oklch, oklch(96% 0.02 270) 10%, transparent); } .ds-btn-ghost-night:hover::before { transform: translateX(-4px); } .ds-btn-ghost-night:active { transform: translateY(1px) scale(0.99); }"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "input-text",
+      "description": "Recessed field on a card: filled with the page background so it reads as cut into the surface.",
+      "html": "<div class=\"ds-field\" dir=\"rtl\"><label class=\"ds-field__label\" for=\"ds-mobile\">شماره موبایل</label><input class=\"ds-field__input\" id=\"ds-mobile\" inputmode=\"tel\" placeholder=\"09123456789\"></div>",
+      "css": ".ds-field { display: flex; flex-direction: column; gap: 7px; font-family: var(--font-body, Estedad, Tahoma, sans-serif); } .ds-field__label { color: var(--color-muted, oklch(52% 0.045 244)); font-size: 14px; } .ds-field__input { width: 100%; min-height: 52px; padding: 13px 18px; border: 1px solid var(--color-border, oklch(86% 0.022 232)); border-radius: 24px; background: var(--color-bg, oklch(97.4% 0.02 226)); color: var(--color-ink, oklch(29% 0.07 250)); outline: none; transition: border-color 220ms cubic-bezier(0.2,0,0,1), box-shadow 220ms cubic-bezier(0.2,0,0,1), background 220ms cubic-bezier(0.2,0,0,1); } .ds-field__input::placeholder { color: var(--color-faint, oklch(62% 0.035 240)); } .ds-field__input:focus { border-color: var(--color-primary, oklch(42% 0.26 274)); box-shadow: 0 0 0 4px color-mix(in oklch, oklch(56% 0.22 274) 22%, transparent); background: var(--color-surface, oklch(99.3% 0.006 220)); }"
+    },
+    {
+      "name": "Frosted Nav Pill",
+      "kind": "nav",
+      "refersTo": "nav",
+      "description": "The scrolled state of the fixed top bar: glass pill, spectrum wordmark, muted links.",
+      "html": "<div class=\"ds-nav\" dir=\"rtl\"><strong class=\"ds-nav__brand\">صدای خوب</strong><a class=\"ds-nav__link\" href=\"#\">سرفصل‌ها</a><a class=\"ds-nav__link\" href=\"#\">نظر هنرجوها</a><a class=\"ds-nav__link\" href=\"#\">تماس</a></div>",
+      "css": ".ds-nav { display: inline-flex; align-items: center; gap: 24px; padding: 12px 18px; border-radius: 999px; background: color-mix(in oklch, var(--color-surface, oklch(99.3% 0.006 220)) 78%, transparent); border: 1px solid color-mix(in oklch, var(--color-surface, oklch(99.3% 0.006 220)) 60%, var(--color-border, oklch(86% 0.022 232))); box-shadow: 0 18px 48px color-mix(in oklch, oklch(42% 0.26 274) 14%, transparent); backdrop-filter: blur(18px); font-family: var(--font-body, Estedad, Tahoma, sans-serif); } .ds-nav__brand { font-size: 23px; font-weight: 860; line-height: 1; background: linear-gradient(260deg, oklch(58% 0.22 27) 0%, oklch(55% 0.25 350) 34%, oklch(48% 0.25 274) 66%, oklch(60% 0.18 250) 100%); -webkit-background-clip: text; background-clip: text; color: transparent; } .ds-nav__link { font-size: 15px; font-weight: 640; color: var(--color-muted, oklch(52% 0.045 244)); text-decoration: none; transition: color 220ms cubic-bezier(0.2,0,0,1); } .ds-nav__link:hover { color: var(--color-ink, oklch(29% 0.07 250)); }"
+    },
+    {
+      "name": "Gold Badge",
+      "kind": "chip",
+      "refersTo": "badge-gold",
+      "description": "Pill label with a currentColor dot. Marks the kicker on day-page cards.",
+      "html": "<span class=\"ds-badge-gold\">دوره آنلاین</span>",
+      "css": ".ds-badge-gold { display: inline-flex; align-items: center; gap: 7px; min-height: 30px; padding: 5px 13px; border-radius: 999px; font-size: 13px; font-weight: 760; line-height: 1; color: var(--on-gold, oklch(22% 0.05 258)); background: var(--gold-100, oklch(95% 0.05 88)); border: 1px solid color-mix(in oklch, oklch(78% 0.14 82) 42%, transparent); font-family: var(--font-body, Estedad, Tahoma, sans-serif); } .ds-badge-gold::before { content: \"\"; width: 7px; height: 7px; border-radius: 50%; background: currentColor; opacity: 0.85; }"
+    },
+    {
+      "name": "Paper Card",
+      "kind": "card",
+      "refersTo": "card-paper",
+      "description": "The day-page container: stadium radius, hairline border, indigo-tinted shadow, inset highlight.",
+      "html": "<div class=\"ds-card-paper\" dir=\"rtl\"><h3 class=\"ds-card-paper__title\">آنچه در این دوره دریافت می‌کنید</h3><p class=\"ds-card-paper__text\">درس‌های ویدیویی کوتاه، برگه‌های تمرین و تمرین شنیداری برای هر بخش.</p></div>",
+      "css": ".ds-card-paper { border-radius: 42px; padding: clamp(26px, 4vw, 44px); background: var(--color-surface, oklch(99.3% 0.006 220)); border: 1px solid var(--color-border, oklch(86% 0.022 232)); box-shadow: 0 22px 60px color-mix(in oklch, oklch(42% 0.26 274) 12%, transparent), inset 0 1px 0 rgba(255,255,255,0.76); font-family: var(--font-body, Estedad, Tahoma, sans-serif); } .ds-card-paper__title { margin: 0 0 10px; font-size: clamp(21px, 2vw, 26px); font-weight: 640; line-height: 1.28; color: var(--color-ink-strong, oklch(22% 0.05 258)); } .ds-card-paper__text { margin: 0; font-size: 16px; line-height: 1.65; color: var(--color-muted, oklch(52% 0.045 244)); }"
+    },
+    {
+      "name": "Night Card",
+      "kind": "card",
+      "refersTo": "card-night",
+      "description": "The checkout summary: indigo gradient, gold checkmarks, heavy lifted shadow.",
+      "html": "<div class=\"ds-card-night\" dir=\"rtl\"><h3 class=\"ds-card-night__title\">تئوری موسیقی</h3><ul class=\"ds-card-night__list\"><li>دسترسی دائمی به دوره فعلی</li><li>درس‌های ویدیویی و فایل‌های تمرین</li></ul></div>",
+      "css": ".ds-card-night { border-radius: 42px; padding: clamp(26px, 4vw, 44px); background: linear-gradient(150deg, oklch(24% 0.13 274) 0%, oklch(28% 0.14 270) 100%); color: oklch(96% 0.02 270); border: 1px solid color-mix(in oklch, oklch(56% 0.22 274) 30%, transparent); box-shadow: 0 30px 74px color-mix(in oklch, oklch(42% 0.26 274) 16%, transparent); font-family: var(--font-body, Estedad, Tahoma, sans-serif); } .ds-card-night__title { margin: 0 0 18px; font-size: clamp(21px, 2vw, 26px); font-weight: 640; } .ds-card-night__list { list-style: none; padding: 0; margin: 0; display: grid; gap: 10px; } .ds-card-night__list li { display: grid; grid-template-columns: 28px 1fr; gap: 12px; align-items: center; min-height: 44px; padding: 8px 12px; border-radius: 16px; background: color-mix(in oklch, oklch(99.3% 0.006 220) 12%, transparent); border: 1px solid color-mix(in oklch, oklch(96% 0.02 270) 18%, transparent); color: oklch(80% 0.05 268); font-size: 15px; } .ds-card-night__list li::before { content: \"✓\"; width: 28px; height: 28px; border-radius: 50%; display: grid; place-items: center; background: oklch(83% 0.13 84); color: oklch(22% 0.05 258); font-weight: 800; font-size: 15px; }"
+    },
+    {
+      "name": "Instrument Orb",
+      "kind": "custom",
+      "refersTo": "orb",
+      "description": "The signature image frame: a lit circle with a rotated inner ring holding a rendered ostad illustration. Lifts 8px on hover.",
+      "html": "<figure class=\"ds-orb\" dir=\"rtl\"><span class=\"ds-orb__visual\"><svg viewBox=\"0 0 100 100\" width=\"86%\" height=\"86%\" aria-hidden=\"true\"><circle cx=\"50\" cy=\"38\" r=\"15\" fill=\"oklch(58% 0.22 27)\" opacity=\"0.85\"/><path d=\"M28 78c4-16 12-24 22-24s18 8 22 24z\" fill=\"oklch(42% 0.26 274)\" opacity=\"0.8\"/></svg></span><figcaption class=\"ds-orb__caption\">آکوردها</figcaption></figure>",
+      "css": ".ds-orb { margin: 0; text-align: center; width: 188px; cursor: pointer; font-family: var(--font-body, Estedad, Tahoma, sans-serif); } .ds-orb__visual { position: relative; display: grid; place-items: center; width: 100%; aspect-ratio: 1; border-radius: 50%; overflow: hidden; isolation: isolate; background: radial-gradient(circle at 50% 36%, rgba(255,255,255,0.95), color-mix(in oklch, var(--color-surface, oklch(99.3% 0.006 220)) 84%, color-mix(in oklch, oklch(58% 0.22 27) 13%, transparent)) 62%, color-mix(in oklch, oklch(83% 0.1 274) 40%, var(--color-surface, oklch(99.3% 0.006 220)))); border: 1px solid color-mix(in oklch, var(--color-border, oklch(86% 0.022 232)) 76%, var(--color-surface, oklch(99.3% 0.006 220))); box-shadow: 0 22px 60px color-mix(in oklch, oklch(42% 0.26 274) 12%, transparent); transition: transform 220ms cubic-bezier(0.2,0,0,1), box-shadow 220ms cubic-bezier(0.2,0,0,1); } .ds-orb__visual::before { content: \"\"; position: absolute; inset: 15%; border-radius: 50%; border: 1px solid color-mix(in oklch, oklch(58% 0.22 27) 32%, transparent); transform: rotate(-10deg); opacity: 0.55; } .ds-orb:hover .ds-orb__visual { transform: translateY(-8px); box-shadow: 0 30px 74px color-mix(in oklch, oklch(42% 0.26 274) 16%, transparent); } .ds-orb__caption { margin-top: 16px; font-size: 20px; font-weight: 640; color: var(--color-ink-strong, oklch(22% 0.05 258)); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Night Stage",
+    "overview": "The page is a concert hall with the house lights half down. A gold spotlight falls from above onto the calligraphic wordmark; a conductor stands on a lit podium with three glowing instrument orbs arced around them; music notes drift in the dark air. Then the curtain opens onto the teaching sections, which sit in pale sky-paper daylight where a beginner can actually read. The site alternates between these two worlds all the way down: night bands (hero, testimonials, checkout summary, footer) and day pages (course, curriculum, method, outcomes). That alternation is the composition, not decoration.\n\nThe system is Persian and right-to-left natively. One variable font, Estedad, does every job from 860-weight display to 400-weight body, and logical properties carry direction throughout. Nothing here is a mirrored Western layout. Persian numerals appear in display contexts; Latin digits are reserved for phone numbers and form input.\n\nMeaning is carried by illustration, never by icons: a set of rendered 3D ostad (master-teacher) characters, a tuxedoed conductor, cut-out instruments, and brush-calligraphy poetry used as faint texture. This system explicitly rejects corporate-SaaS gradient-and-feature-card polish, conservatory gold-on-black formality, cartoon-mascot brightness, and the countdown-timer theatrics of Iranian course-selling pages. Energy comes from stage light; it never comes from urgency.",
+    "keyCharacteristics": [
+      "Two-register composition: deep indigo night bands against pale sky-paper daylight",
+      "Gold is the CTA and the light source; indigo is the depth; crimson is the accent",
+      "One variable Persian family, Estedad (100–900), across the whole scale",
+      "Very generous radii — 999px pills, 42px stadium cards — nothing sharp",
+      "Rendered illustration in circular orb spotlights instead of any icon set",
+      "Choreographed GSAP hero entrance, pointer parallax, and a perpetual gentle float",
+      "Dark mode is a deep wine page, not a charcoal one, with the night bands kept indigo"
+    ],
+    "rules": [
+      { "name": "The Gold Means Go Rule", "body": "Gold is reserved for the primary action and for literal light. A gold surface that isn't clickable and isn't a light source is a bug.", "section": "colors" },
+      { "name": "The Two Registers Rule", "body": "Every section is either a night band or a day page. There is no third, in-between surface tone. When a new section is added, decide which register it belongs to before styling anything else.", "section": "colors" },
+      { "name": "The No Neutral Grey Rule", "body": "Every neutral in this system carries a hue — blue-leaning in light mode, red-leaning in dark. A pure grey anywhere is off-system.", "section": "colors" },
+      { "name": "The Wordmark Is the Display Rule", "body": "In the hero, the calligraphic logo is the largest type on the page. Any headline set near it stays subordinate in size and weight.", "section": "typography" },
+      { "name": "The Weight-Not-Family Rule", "body": "Contrast is produced by moving along Estedad's 100–900 axis. Introducing a second typeface requires a reason that weight cannot serve.", "section": "typography" },
+      { "name": "The No Caps Rule", "body": "No uppercase, no letter-spaced Latin kickers, no all-caps labels. Persian has no case and the brand has no Latin voice.", "section": "typography" },
+      { "name": "The Tinted Shadow Rule", "body": "A shadow always carries a hue — indigo on light, wine-black on dark, gold under lit elements. A neutral grey drop shadow is prohibited.", "section": "elevation" },
+      { "name": "The Glass Is Earned Rule", "body": "backdrop-filter: blur(18px) appears in exactly one place: the top nav, and only after it frosts on scroll. Glass anywhere else is decoration and is not permitted.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do keep every new section in one of the two registers: indigo night band or sky-paper day page.",
+      "Do reserve Spotlight Gold for the primary action and for literal light sources.",
+      "Do tint every shadow toward Stage Indigo (light) or wine-black (dark).",
+      "Do frame every image in a circular orb, an organic blob radius, or a stadium-radius tile — the system has no square photo frames.",
+      "Do use logical properties (inset-inline, padding-inline, margin-inline) so RTL stays native; left/right is a bug unless it is a deliberately mirrored ornament.",
+      "Do set display numerals in Persian digits (۱۲، ۴۸، ۹۰); keep Latin digits for phone numbers and form input.",
+      "Do carry meaning with the rendered ostad illustrations from assets/design/.",
+      "Do give Farsi text room: 1.65 body line-height, 1.8 for leads, 60ch maximum measure."
+    ],
+    "donts": [
+      "Don't introduce an icon set. This brand ships no icons; ✓ and ♪ ♫ are the only marks.",
+      "Don't use background-clip: text with a gradient anywhere except the brand wordmark. That gradient is the logo's own identity.",
+      "Don't add glassmorphism beyond the scrolled nav.",
+      "Don't use a neutral grey — for text, borders, or shadows. Every neutral carries a hue.",
+      "Don't put an eyebrow above every section. The dotted .eyebrow currently repeats on seven consecutive sections, which is exactly the template scaffolding this brand should not read as.",
+      "Don't let a headline compete with the calligraphic wordmark in the hero.",
+      "Don't set anything in uppercase or add letter-spaced Latin kickers.",
+      "Don't reach for corporate-SaaS moves: generic gradients, tidy three-up feature-card grids, stock office imagery, English-startup polish transplanted into Farsi.",
+      "Don't reach for conservatory formality: gold-on-black solemnity, ornate frames, sheet-music wallpaper, maestro grandeur.",
+      "Don't reach for kids'-app brightness: cartoon mascots, primary colours, gamified badges, cheerful bounce easing.",
+      "Don't reach for course-selling theatrics: countdown timers, discount stickers, crossed-out prices, endless testimonial walls.",
+      "Don't write raw rgb() or oklab() values into the token block. --color-surface-2: rgb(90, 5, 5) in the dark theme is the current exception and should be normalised to OKLCH.",
+      "Don't ship an animation without a prefers-reduced-motion path. Content is never gated behind a transition."
+    ]
+  }
+}
